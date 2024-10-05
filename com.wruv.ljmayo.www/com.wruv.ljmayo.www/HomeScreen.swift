@@ -1,18 +1,18 @@
 //
-//  AccountScreen.swift
+//  HomeScreen.swift
 //  com.wruv.ljmayo.www
 //
 //  Created by Max Schwarz on 10/5/24.
 //
 import SwiftUI
 
-struct AccountScreen: View {
+struct HomeScreen: View {
     var body: some View {
         VStack {
-            Text("Account Screen")
+            Text("Home Screen")
                 .font(.largeTitle)
                 .padding()
-            Image(systemName: "person.fill")
+            Image(systemName: "house.fill")
                 .resizable()
                 .frame(width: 100, height: 100)
                 .padding()
