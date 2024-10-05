@@ -4,6 +4,9 @@
 //
 //  Created by Max Schwarz on 10/5/24.
 //
+
+import SwiftUI
+
 struct ArchivesScreen: View {
     var body: some View {
         VStack {
@@ -16,4 +19,8 @@ struct ArchivesScreen: View {
                 .padding()
         }
     }
+}
+
+#Preview {
+    ContentView()
 }
