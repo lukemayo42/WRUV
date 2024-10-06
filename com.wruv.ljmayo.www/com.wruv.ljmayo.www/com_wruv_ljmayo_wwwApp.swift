@@ -11,7 +11,8 @@ import SwiftUI
 struct com_wruv_ljmayo_wwwApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            // loading screen appears first
+            LoadingScreen()
         }
     }
 }
