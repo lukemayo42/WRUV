@@ -21,5 +21,5 @@ struct HomeScreen: View {
 }
 
 #Preview {
-    ContentView()
+    HomeView()
 }

@@ -21,5 +21,5 @@ struct AccountScreen: View {
 }
 
 #Preview {
-    ContentView()
+    HomeView()
 }
