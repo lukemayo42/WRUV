@@ -33,47 +33,6 @@ struct ContentView: View {
     }
 }
 
-struct HomeScreen: View {
-    var body: some View {
-        VStack {
-            Text("Home Screen")
-                .font(.largeTitle)
-                .padding()
-            Image(systemName: "house.fill")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .padding()
-        }
-    }
-}
-
-struct ArchivesScreen: View {
-    var body: some View {
-        VStack {
-            Text("Archives Screen")
-                .font(.largeTitle)
-                .padding()
-            Image(systemName: "line.3.horizontal")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .padding()
-        }
-    }
-}
-
-struct AccountScreen: View {
-    var body: some View {
-        VStack {
-            Text("Account Screen")
-                .font(.largeTitle)
-                .padding()
-            Image(systemName: "person.fill")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .padding()
-        }
-    }
-}
 
 #Preview {
     ContentView()
