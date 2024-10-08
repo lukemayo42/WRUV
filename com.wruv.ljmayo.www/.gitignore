@@ -4,7 +4,7 @@
 .DS_Store
 ## User settings
 com.wruv.ljmayo.www.xcodeproj/project.xcworkspace/xcuserdata/
-.xcuserdata
+xcuserdata/
 ## Obj-C/Swift specific
 *.hmap
 
