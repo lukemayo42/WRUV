@@ -23,5 +23,5 @@ struct ArchivesScreen: View {
 }
 
 #Preview {
-    ContentView()
+    HomeView()
 }

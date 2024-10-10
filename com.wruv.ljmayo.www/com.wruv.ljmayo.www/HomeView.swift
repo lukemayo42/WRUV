@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct HomeView: View {
     @State private var playing: Bool =  false
     //placeholder values
     @State private var showname: String = "radio show"
@@ -45,5 +45,5 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    HomeView()
 }
