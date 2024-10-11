@@ -2,7 +2,7 @@
 //  HomeScreen.swift
 //  com.wruv.ljmayo.www
 //
-//  Created by Max Schwarz on 10/5/24.
+//  Created by Max Schwarz on 10/5/24..
 //
 import SwiftUI
 
