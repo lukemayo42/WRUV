@@ -8,3 +8,22 @@
 import SwiftUI
 
 
+class UIStyles:ObservableObject{
+    
+    
+    var black: Color
+    var white: Color
+    var gray :Color
+    var blue :Color
+    
+    init(){
+        black = Color(.black)
+        white = Color(.white)
+        gray = Color(.gray)
+        blue = Color(.blue)
+    }
+    
+    func primaryFont(size:CGFloat)->Font{
+        return Font.custom("AvenirNext-Medium", size:size)
+    }
+}

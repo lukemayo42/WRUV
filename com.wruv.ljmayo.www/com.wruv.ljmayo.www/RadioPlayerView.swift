@@ -9,31 +9,31 @@ import SwiftUI
 import SwiftUICore
 
 struct RadioPlayerView: View {
-    
+    @EnvironmentObject var style : UIStyles
     @Binding var playing:Bool
     @Binding var showname:String
     @Binding var djName:String
     var body: some View {
         ZStack(){
-            Rectangle().fill(.black).frame(height:90)
+            Rectangle().fill(style.black).frame(height:90)
             HStack{
                 Button(action: toggleButton){
                     SwiftUICore.ZStack{
                         Circle()
-                            .fill(.white)
+                            .fill(style.white)
                             .frame(height: 60)
                         Circle()
-                            .fill(.black)
+                            .fill(style.black)
                             .frame(height: 50)
                         if playing{
-                            Image(systemName: "pause").foregroundColor(.white).font(.system(size: 32, weight: .bold, design: .rounded))
+                            Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }else{
-                            Image(systemName: "play").foregroundColor(.white).font(.system(size: 32, weight: .bold, design: .rounded))
+                            Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }
                     }
                 }
                 HStack{
-                    Text("\(showname)\n \(djName)").foregroundColor(.white).bold().font(.largeTitle)
+                    Text("\(showname)\n \(djName)").foregroundColor(.white).bold().font(style.primaryFont(size:32.0))
                     
                 }.padding()
             }

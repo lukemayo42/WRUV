@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var style: UIStyles
     @State private var playing: Bool =  false
     //placeholder values
     @State private var showname: String = "radio show"
@@ -45,5 +46,6 @@ struct HomeView: View {
 
 
 #Preview {
-    HomeView()
+    var style = UIStyles()
+    HomeView().environmentObject(style)
 }
