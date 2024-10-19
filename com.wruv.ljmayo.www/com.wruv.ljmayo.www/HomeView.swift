@@ -16,32 +16,30 @@ struct HomeView: View {
         TabView {
             tabGroup(view: HomeScreen())
                 .tabItem {
-                    Image(systemName: "music.house.fill")
-                    Text("Home")
+                    Image(systemName: "house.fill")
+                    
                 }
             
             tabGroup(view: ArchivesScreen())
                 .tabItem {
-                    Image(systemName: "archivebox.fill")
-                    Text("Archives")
+                    Image(systemName: "line.3.horizontal")
+                        .rotationEffect(.degrees(90))
                 }
         
             // Account Screen Tab
             tabGroup(view: AccountScreen())
                 .tabItem {
                     Image(systemName: "person.fill")
-                    Text("Account")
                 }
             }
 
-    }
+        }
     func tabGroup(view: some View) -> some View{
         VStack{
             view
-            //Spacer()
             RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)//.frame(maxHeight:.infinity, alignment:.bottom)
         }
-        .frame(maxHeight: .infinity)
+        .frame(maxWidth:.infinity, maxHeight:.infinity, alignment: .bottom)
     }
 }
 

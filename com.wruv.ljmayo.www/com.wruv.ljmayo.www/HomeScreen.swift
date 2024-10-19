@@ -29,6 +29,7 @@ struct HomeScreen: View {
                     .padding()
                     Text("11/4 DJ: Example Show - Example Time")
                     .padding()
+                    
                 }
                 
             }
@@ -38,12 +39,13 @@ struct HomeScreen: View {
             .sheet(isPresented: $showPlaylist) {
                 PlaylistView(showPlaylist: $showPlaylist)
             }
-           
         }
+        
         VStack{
-            Spacer()
+            //Spacer()
             Button(action: { showPlaylist = true }) {
                 HStack {
+                    
                     Image("SampleLogo1")
                         .resizable()
                         .scaledToFit()
@@ -51,8 +53,13 @@ struct HomeScreen: View {
                         .cornerRadius(10)
                     Spacer()
                     Text("Peg - Steely Dan")
+                        .padding()
                 }
-                .padding()
+                .background(Color.blue)
+                .cornerRadius(10)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
+                //.frame(width: .infinity, height: .infinity, alignment: .bottom)
             }
             
         }
