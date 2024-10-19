@@ -18,6 +18,8 @@ struct HomeView: View {
             tabGroup(view: HomeScreen())
                 .tabItem {
                     Image(systemName: "house.fill")
+                        .renderingMode(.template)
+                        .foregroundColor(style.white)
                     
                 }
             
@@ -34,11 +36,13 @@ struct HomeView: View {
                 }
             }
 
-        }
+    }
+
     func tabGroup(view: some View) -> some View{
         VStack{
             view
-            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName).frame(maxHeight:.infinity, alignment:.bottom)
+            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)
+                .frame(maxHeight:.infinity, alignment:.bottom)
         }
     }
 }

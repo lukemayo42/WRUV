@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUICore
 
 struct RadioPlayerView: View {
     @EnvironmentObject var style : UIStyles
@@ -14,16 +13,16 @@ struct RadioPlayerView: View {
     @Binding var showname:String
     @Binding var djName:String
     var body: some View {
-        ZStack(){
+        ZStack{
             Rectangle().fill(style.black).frame(height:90)
             HStack{
                 Button(action: toggleButton){
-                    SwiftUICore.ZStack{
+                   ZStack{
                         Circle()
-                            .fill(style.white)
+                           .fill(style.white)
                             .frame(height: 60)
                         Circle()
-                            .fill(style.black)
+                           .fill(style.darkGray)
                             .frame(height: 50)
                         if playing{
                             Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
@@ -34,12 +33,9 @@ struct RadioPlayerView: View {
                 }
                 HStack{
                     Text("\(showname)\n \(djName)").foregroundColor(.white).bold().font(style.primaryFont(size:32.0))
-                    
                 }.padding()
             }
-            
         }
-
     }
     func toggleButton(){
         if playing{
@@ -51,3 +47,7 @@ struct RadioPlayerView: View {
 }
 
 
+#Preview {
+    var style = UIStyles()
+    HomeView().environmentObject(style)
+}
