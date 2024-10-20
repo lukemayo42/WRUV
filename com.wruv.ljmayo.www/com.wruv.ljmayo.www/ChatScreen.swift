@@ -2,7 +2,7 @@
 //  ChatScreen.swift
 //  com.wruv.ljmayo.www
 //
-//  Created by user264313 on 10/20/24.
+//  Created by jsdrisco on 10/20/24.
 //
 
 import SwiftUI
@@ -14,25 +14,32 @@ struct ChatScreen: View {
     let CHATHEIGHT = 800.00
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                List {
-                    ForEach(messages) { message in
-                        Text("\(message.sendingUser): \(message.text)")
+        VStack {
+            ScrollView {
+                VStack(alignment: .leading) {
+                    List {
+                        ForEach(messages) { message in
+                            Text("\(message.sendingUser): \(message.text)")
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.gray)
+                        }
                     }
+                    .listStyle(.inset)
+                    .background(Color.gray)
+                    .frame(height: min(CHATHEIGHT, 44.0 * Double(messages.count)))
                 }
             }
-            .frame(height: CHATHEIGHT)
+            .background(Color.gray)
+            
+            TextField("Enter a new message here...", text: $newMessageText)
+                .onSubmit {
+                    var newMessage = Message(text: newMessageText, sendingUser: username, timeSent: Date())
+                    messages.append(newMessage)
+                    newMessageText = ""
+                }
+                .frame(width: 350, alignment: .center)
         }
-        .background(Color.white)
-        
-        TextField("Enter a new message here...", text: $newMessageText)
-            .onSubmit {
-                var newMessage = Message(text: newMessageText, sendingUser: username, timeSent: Date())
-                messages.append(newMessage)
-                newMessageText = ""
-            }
-            .frame(width: 350, alignment: .center)
+        .background(Color.gray)
     }
 }
 
