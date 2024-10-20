@@ -7,19 +7,73 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    
+
+    @State private var showPlaylist: Bool = false  // State to manage pop-up
+    @State private var isPlaying: Bool = false
+
     var body: some View {
+        
         VStack {
-            Text("Home Screen")
-                .font(.largeTitle)
-                .padding()
-            Image(systemName: "house.fill")
+
+            
+            Image("wruvlogo")
+
                 .resizable()
                 .frame(width: 100, height: 100)
                 .padding()
+            Text("Upcoming Shows")
+            ScrollView {
+                VStack {
+                    
+                    Text("11/1 DJ: Example Show - Example Time")
+                    .padding()
+                    Text("11/2 DJ: Example Show - Example Time")
+                    .padding()
+                    Text("11/3 DJ: Example Show - Example Time")
+                    .padding()
+                    Text("11/4 DJ: Example Show - Example Time")
+                    .padding()
+                    
+                }
+                
+            }
+            .fullScreenCover(isPresented: $isPlaying) {
+                HomeView()
+            }
+            .sheet(isPresented: $showPlaylist) {
+                PlaylistView(showPlaylist: $showPlaylist)
+            }
         }
+        
+        VStack{
+            //Spacer()
+            Button(action: { showPlaylist = true }) {
+                HStack {
+                    
+                    Image("SampleLogo1")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .cornerRadius(10)
+                    Spacer()
+                    Text("Peg - Steely Dan")
+                        .padding()
+                }
+                .background(Color.blue)
+                .cornerRadius(10)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
+                //.frame(width: .infinity, height: .infinity, alignment: .bottom)
+            }
+            
+        }
+        
     }
+        
+    
 }
+
+
 
 #Preview {
     HomeView()

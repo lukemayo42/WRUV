@@ -42,9 +42,12 @@ struct HomeView: View {
     func tabGroup(view: some View) -> some View{
         VStack{
             view
-            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)
-        }.frame(maxHeight:.infinity, alignment:.bottom)
-            .background(colorScheme == .dark ? style.black : style.white)
+
+            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)//.frame(maxHeight:.infinity, alignment:.bottom)
+        }
+        .frame(maxWidth:.infinity, maxHeight:.infinity, alignment: .bottom)
+        .background(colorScheme == .dark ? style.black : style.white)
+
     }
 }
 

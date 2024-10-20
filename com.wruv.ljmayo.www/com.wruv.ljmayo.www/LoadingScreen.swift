@@ -15,7 +15,7 @@ struct LoadingScreen: View {
         ZStack {
             if self.isActive {
                 // once our login/main screen are implemented this if can be altered
-                HomeView()
+                LoginScreen()
             } else {
                 Rectangle()
                     .background(Color.black)
