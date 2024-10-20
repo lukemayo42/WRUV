@@ -9,10 +9,11 @@ import SwiftUI
 
 @main
 struct com_wruv_ljmayo_wwwApp: App {
+    var style = UIStyles()
     var body: some Scene {
         WindowGroup {
             // loading screen appears first
-            LoadingScreen()
+            LoadingScreen().environmentObject(style)
         }
     }
 }

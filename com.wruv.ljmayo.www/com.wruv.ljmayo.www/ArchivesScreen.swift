@@ -8,20 +8,40 @@
 import SwiftUI
 
 struct ArchivesScreen: View {
+    @EnvironmentObject var style : UIStyles
+    @Environment(\.colorScheme) var colorScheme
+    @State private var searchText  = ""
+    @State private var showList = ["askdhfkshdlkhas", "show 2", "show 3", "show 4", "show 5", "6", "7"]
+    @State private var showText: String?
     var body: some View {
-        VStack {
-            
-            Text("Archives Screen")
-                .font(.largeTitle)
-                .padding()
-            Image(systemName: "line.3.horizontal")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .padding()
+        NavigationStack {
+            ZStack{
+                if colorScheme == .dark{
+                    style.black.ignoresSafeArea()
+                } else{
+                    style.white.ignoresSafeArea()
+                }
+                
+                ScrollView{
+                    ForEach(searchResults, id: \.self) { name in
+                        ArchiveShowView(showname:name, djName:"DJ")
+                    }
+                }
+               
+            }
+            .navigationTitle("Archives")
+        }.searchable(text: $searchText, prompt:"search")
+            .frame(maxHeight:.infinity, alignment:.bottom)    }
+
+    var searchResults: [String] {
+        if searchText.isEmpty {
+            return showList
+        } else {
+            return showList.filter { $0.contains(searchText) }
         }
     }
 }
 
 #Preview {
-    HomeView()
+    ArchivesScreen().environmentObject(UIStyles())
 }

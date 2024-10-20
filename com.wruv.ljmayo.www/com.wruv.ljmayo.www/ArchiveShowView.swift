@@ -7,15 +7,27 @@
 
 import SwiftUI
 
-struct RadioPlayerView: View {
+struct ArchiveShowView: View {
     @EnvironmentObject var style : UIStyles
-    @Binding var playing:Bool
-    @Binding var showname:String
-    @Binding var djName:String
+    @State private var playing:Bool = false
+    private var showname:String
+    private var djName:String
+    init(showname:String, djName:String){
+        self.showname = showname
+        self.djName = djName
+    }
 
     var body: some View {
         ZStack{
-            Rectangle().fill(style.black).frame(height:90)
+            RoundedRectangle(cornerRadius:12)
+                .fill(style.white)
+                .frame(height:80)
+                .padding(EdgeInsets(top:0, leading: 20, bottom:0, trailing:20))
+            
+            RoundedRectangle(cornerRadius:12)
+                .fill(style.black)
+                .frame(height:70)
+                .padding(EdgeInsets(top:0, leading: 25, bottom:0, trailing:25))
             HStack{
                 Button(action: toggleButton){
                    ZStack{
@@ -33,10 +45,12 @@ struct RadioPlayerView: View {
                     }
                 }
                 HStack{
-                    Text("\(showname)\n \(djName)").foregroundColor(.white).bold().font(style.primaryFont(size:32.0))
-                }
+                    Text("\(showname)\n \(djName)").foregroundColor(style.white).bold().font(style.primaryFont(size:24.0))
+                        .frame(height: 70)
+                        .truncationMode(.tail)
+                }.padding()
             }
-        }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+        }
     }
     func toggleButton(){
         if playing{
@@ -49,6 +63,5 @@ struct RadioPlayerView: View {
 
 
 #Preview {
-    var style = UIStyles()
-    HomeView().environmentObject(style)
+    ArchivesScreen().environmentObject(UIStyles())
 }
