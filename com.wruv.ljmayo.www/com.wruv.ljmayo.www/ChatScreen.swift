@@ -8,11 +8,25 @@
 import SwiftUI
 
 struct ChatScreen: View {
+    @State private var newMessageText: String = ""
+    @State var messages: [Message] = []
+    var username: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            ForEach(messages) { message in
+                Text("\(message.sendingUser): \(message.text)")
+            }
+        }
+        
+        TextField("Enter a new message here...", text: $newMessageText)
+            .onSubmit {
+                var newMessage = Message(text: newMessageText, sendingUser: username, timeSent: Date())
+                messages.append(newMessage)
+            }
     }
 }
 
 #Preview {
-    ChatScreen()
+    ChatScreen(username: "jsdrisco")
 }

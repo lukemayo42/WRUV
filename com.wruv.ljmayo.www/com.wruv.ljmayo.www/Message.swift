@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct Message {
-    let CHARLIMIT = 140
+struct Message: Identifiable {
+    let id = UUID()
     var text: String
+    var sendingUser: String
     var timeSent: Date
 }
