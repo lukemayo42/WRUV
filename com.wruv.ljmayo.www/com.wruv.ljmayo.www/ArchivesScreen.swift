@@ -9,20 +9,29 @@ import SwiftUI
 
 struct ArchivesScreen: View {
     @EnvironmentObject var style : UIStyles
+    @Environment(\.colorScheme) var colorScheme
     @State private var searchText  = ""
-    @State private var showList = ["show 1", "show 2", "show 3", "show 4", "show 5", "6", "7"]
+    @State private var showList = ["askdhfkshdlkhas", "show 2", "show 3", "show 4", "show 5", "6", "7"]
     @State private var showText: String?
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(searchResults, id: \.self) { name in
-                    Text(name)
+            ZStack{
+                if colorScheme == .dark{
+                    style.black.ignoresSafeArea()
+                } else{
+                    style.white.ignoresSafeArea()
                 }
+                
+                ScrollView{
+                    ForEach(searchResults, id: \.self) { name in
+                        ArchiveShowView(showname:name, djName:"DJ")
+                    }
+                }
+               
             }
             .navigationTitle("Archives")
         }.searchable(text: $searchText, prompt:"search")
-            .background(style.black)
-    }
+            .frame(maxHeight:.infinity, alignment:.bottom)    }
 
     var searchResults: [String] {
         if searchText.isEmpty {

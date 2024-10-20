@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var style: UIStyles
+    @Environment(\.colorScheme) var colorScheme
     @State private var playing: Bool =  false
     //placeholder values
     @State private var showname: String = "radio show"
@@ -42,8 +43,8 @@ struct HomeView: View {
         VStack{
             view
             RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)
-                .frame(maxHeight:.infinity, alignment:.bottom)
-        }
+        }.frame(maxHeight:.infinity, alignment:.bottom)
+            .background(colorScheme == .dark ? style.black : style.white)
     }
 }
 
@@ -51,5 +52,5 @@ struct HomeView: View {
 
 #Preview {
     var style = UIStyles()
-    HomeView().environmentObject(style)
+    HomeView().environmentObject(UIStyles())
 }
