@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct com_wruv_ljmayo_wwwApp: App {
+    init() {
+            FirebaseApp.configure()
+        }
     var style = UIStyles()
     var body: some Scene {
         WindowGroup {
