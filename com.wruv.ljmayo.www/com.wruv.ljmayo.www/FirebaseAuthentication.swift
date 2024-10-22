@@ -37,15 +37,24 @@ class FirebaseAuthService {
     }
 
     // sign in as existing user
-    func loginUser(email: String, password: String) -> Error? {
-        var loginError: Error? = nil
-
+    func loginUser(email: String, password: String) -> String? {
+        var loginErrorMessage: String? = nil
+        
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-            if let error = error {
-                loginError = error
+            if let error = error as NSError? {
+                switch AuthErrorCode(rawValue: error.code) {
+                case .wrongPassword:
+                    loginErrorMessage = "Incorrect password. Please try again."
+                case .invalidEmail:
+                    loginErrorMessage = "Invalid email address."
+                case .userNotFound:
+                    loginErrorMessage = "User not found. Please register."
+                default:
+                    loginErrorMessage = error.localizedDescription
+                }
             }
         }
-
-        return loginError
+    
+        return loginErrorMessage
     }
 }
