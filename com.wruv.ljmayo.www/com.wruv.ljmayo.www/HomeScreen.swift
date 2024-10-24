@@ -7,13 +7,17 @@
 import SwiftUI
 
 struct HomeScreen: View {
+
     @State private var showPlaylist: Bool = false  // State to manage pop-up
     @State private var isPlaying: Bool = false
+
     var body: some View {
         
         VStack {
+
             
             Image("wruvlogo")
+
                 .resizable()
                 .frame(width: 100, height: 100)
                 .padding()
