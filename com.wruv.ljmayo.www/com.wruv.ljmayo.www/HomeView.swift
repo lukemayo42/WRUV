@@ -18,22 +18,24 @@ struct HomeView: View {
         TabView {
             tabGroup(view: HomeScreen())
                 .tabItem {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "music.house.fill")
                         .renderingMode(.template)
                         .foregroundColor(style.white)
+                    Text("Home")
                     
                 }
             
             tabGroup(view: ArchivesScreen())
                 .tabItem {
-                    Image(systemName: "line.3.horizontal")
-                        .rotationEffect(.degrees(90))
+                    Image(systemName: "archivebox.fill")
+                    Text("Archives")
                 }
         
             // Account Screen Tab
             tabGroup(view: AccountScreen())
                 .tabItem {
                     Image(systemName: "person.fill")
+                    Text("Account")
                 }
             }
 
