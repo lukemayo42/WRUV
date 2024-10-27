@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var style: UIStyles
+    @EnvironmentObject var radioStream: RadioStream
     @Environment(\.colorScheme) var colorScheme
     @State private var playing: Bool =  false
     //placeholder values
