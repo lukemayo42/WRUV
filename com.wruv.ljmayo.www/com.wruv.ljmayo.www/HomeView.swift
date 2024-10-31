@@ -16,6 +16,7 @@ struct HomeView: View {
     @State private var djName: String = "DJ"
     var body: some View {
         TabView {
+            //Home Screen Tab
             tabGroup(view: HomeScreen())
                 .tabItem {
                     Image(systemName: "music.house.fill")
@@ -24,19 +25,25 @@ struct HomeView: View {
                     Text("Home")
                     
                 }
-            
+            //Chat Screen Tab
+            tabGroup(view: AccountScreen()) //replace with chat screen
+                .tabItem {
+                    Image(systemName: "message.fill")
+                    Text("Chat")
+                }
+            //Archives Screen Tab
             tabGroup(view: ArchivesScreen())
                 .tabItem {
                     Image(systemName: "archivebox.fill")
                     Text("Archives")
                 }
-        
             // Account Screen Tab
             tabGroup(view: AccountScreen())
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Account")
                 }
+            
             }
 
     }
