@@ -1,3 +1,5 @@
+import UIKit
+
 //
 //  SpinitronAPI.swift
 //  com.wruv.ljmayo.www
@@ -7,7 +9,14 @@
 
 import Foundation
 
-
+class SpinitronValues{
+    // variables to hold data
+    var spins: [Spin]
+    init(){
+        spins = []
+    }
+    
+}
 struct Spins:Decodable{
     var items : [Spin]
     
@@ -18,25 +27,14 @@ struct Shows: Decodable{
 }
 
 struct Spin: Decodable{
-    let image : String
+    let image : String?
     let artist : String
-    let release : String
-    let label: String
-    let genre: String
-    let released: Int
+    let release : String?
+    let label: String?
+    let genre: String?
+    let released: Int?
     let song: String
-    let links: link
-    
-    enum CodingKeys: String, CodingKey{
-        case image
-        case artist
-        case release
-        case label
-        case genre
-        case relaesed
-        case song
-        case links = "_links"
-    }
+
 }
 
 struct link: Decodable{
@@ -47,7 +45,7 @@ struct personasLink: Decodable{
     let link: String
     
     enum CodingKeys: String, CodingKey{
-        link = "href"
+        case link = "href"
     }
 }
 
@@ -57,14 +55,14 @@ struct Show: Decodable{
     let title: String
 }
 
-func fetchSpins() async throws -> Spins{
-    let spinsURL = URL(string:"https://spinitron.com/api/spins?access-token=api-key")
+func fetchSpins() async throws -> [Spin]{
+    let spinsURL = URL(string:"https://spinitron.com/api/spins?access-token=api-key")!
     let (data, _) = try await URLSession.shared.data(from: spinsURL)
-    let spins = try JSONDecoder().decode(Wrapper.self, from: data)
-    return spins
+    let spins = try JSONDecoder().decode(Spins.self, from: data)
+    return spins.items
 }
-Task{
-    try await fetchSpins()
-}
+
+
+
 
 
