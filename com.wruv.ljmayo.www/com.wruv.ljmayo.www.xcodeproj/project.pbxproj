@@ -29,9 +29,22 @@
 		21B86D002CA5DF9300FD93D0 /* com.wruv.ljmayo.wwwUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = com.wruv.ljmayo.wwwUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2135535B2CDD35D500D3F972 /* Exceptions for "com.wruv.ljmayo.www" folder in "com.wruv.ljmayo.www" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"com-wruv-ljmayo-www-Info.plist",
+			);
+			target = 21B86CE52CA5DF9200FD93D0 /* com.wruv.ljmayo.www */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		21B86CE82CA5DF9200FD93D0 /* com.wruv.ljmayo.www */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2135535B2CDD35D500D3F972 /* Exceptions for "com.wruv.ljmayo.www" folder in "com.wruv.ljmayo.www" target */,
+			);
 			path = com.wruv.ljmayo.www;
 			sourceTree = "<group>";
 		};
@@ -398,6 +411,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"com.wruv.ljmayo.www/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "com-wruv-ljmayo-www-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -408,6 +422,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "WRUV.com-wruv-ljmayo-www";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -426,6 +441,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"com.wruv.ljmayo.www/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "com-wruv-ljmayo-www-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -436,6 +452,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "WRUV.com-wruv-ljmayo-www";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
