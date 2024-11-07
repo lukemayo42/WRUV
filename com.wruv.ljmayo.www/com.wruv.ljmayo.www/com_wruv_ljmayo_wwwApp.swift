@@ -10,10 +10,13 @@ import SwiftUI
 @main
 struct com_wruv_ljmayo_wwwApp: App {
     var style = UIStyles()
+    var spinitron = SpinitronValues()
     var body: some Scene {
         WindowGroup {
             // loading screen appears first
-            LoadingScreen().environmentObject(style)
+            LoadingScreen()
+                .environmentObject(style)
+                .environmentObject(spinitron)
         }
     }
 }

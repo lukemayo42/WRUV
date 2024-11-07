@@ -9,19 +9,24 @@ import UIKit
 
 import Foundation
 
-class SpinitronValues{
+class SpinitronValues:ObservableObject{
     // variables to hold data
     var spins: [Spin]
     init(){
         spins = []
     }
         
-    func fetchSpins(field:String, parameters:String) async throws -> [Spin]{
+    func fetchSpins() async throws -> [Spin]{
         let URL = URL(string:"https://spinitron.com/api/spins?access-token=api-key")!
         let (data, _) = try await URLSession.shared.data(from: URL)
         let spins = try JSONDecoder().decode(Spins.self, from: data)
         return spins.items
     }
+    
+    func getSpins() async throws -> [Spin]{
+        return try await fetchSpins()
+    }
+    
 
 }
 struct Spins:Decodable{

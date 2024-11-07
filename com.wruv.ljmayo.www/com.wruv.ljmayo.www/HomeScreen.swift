@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct HomeScreen: View {
-
+    @EnvironmentObject var spintron: SpinitronValues
     @State private var showPlaylist: Bool = false  // State to manage pop-up
     @State private var isPlaying: Bool = false
 
