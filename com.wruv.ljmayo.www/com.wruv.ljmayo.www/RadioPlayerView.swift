@@ -12,7 +12,7 @@ struct RadioPlayerView: View {
     @Binding var playing:Bool
     @Binding var showname:String
     @Binding var djName:String
-
+    
     var body: some View {
         ZStack{
             Rectangle().fill(style.black).frame(height:90)
