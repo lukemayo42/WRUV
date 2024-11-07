@@ -16,25 +16,34 @@ struct HomeView: View {
     @State private var djName: String = "DJ"
     var body: some View {
         TabView {
+            //Home Screen Tab
             tabGroup(view: HomeScreen())
                 .tabItem {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "music.house.fill")
                         .renderingMode(.template)
                         .foregroundColor(style.white)
+                    Text("Home")
                     
                 }
-            
+            //Chat Screen Tab
+            tabGroup(view: AccountScreen()) //replace with chat screen
+                .tabItem {
+                    Image(systemName: "message.fill")
+                    Text("Chat")
+                }
+            //Archives Screen Tab
             tabGroup(view: ArchivesScreen())
                 .tabItem {
-                    Image(systemName: "line.3.horizontal")
-                        .rotationEffect(.degrees(90))
+                    Image(systemName: "archivebox.fill")
+                    Text("Archives")
                 }
-        
             // Account Screen Tab
             tabGroup(view: AccountScreen())
                 .tabItem {
                     Image(systemName: "person.fill")
+                    Text("Account")
                 }
+            
             }
 
     }

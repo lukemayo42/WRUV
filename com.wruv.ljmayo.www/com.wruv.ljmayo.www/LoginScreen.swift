@@ -3,43 +3,53 @@ import SwiftUI
 struct LoginScreen: View {
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var isLoggedIn: Bool = false
-    @State private var showRegistration: Bool = false  // State to manage pop-up
-
+    @State private var showRegistration: Bool = false
+    @State private var loginErrorMessage: String? = nil
+    @State private var isLoggedIn: Bool = false // Local state for login status
+    
+    var auth = FirebaseAuthService()
+    
     var body: some View {
         ZStack {
-            // Set black background
-            Color.black
-                .edgesIgnoringSafeArea(.all)
+            Color.black.edgesIgnoringSafeArea(.all)
 
             VStack {
-                // WRUV Logo at the top
                 Image("wruvlogo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200, height: 200)
                     .padding(.top, 50)
-
+                
                 Spacer().frame(height: 50)
-
-                // Email Input
+                
                 TextField("Email", text: $email)
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(10)
                     .padding(.horizontal, 20)
                     .keyboardType(.emailAddress)
-
-                // Password Input
+                    .textInputAutocapitalization(.never)
+                
                 SecureField("Password", text: $password)
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(10)
                     .padding(.horizontal, 20)
 
-                // Login Button
+                // Login Button action in LoginScreen
+                // LoginScreen.swift
                 Button(action: {
-                    isLoggedIn = true
+                    auth.loginUser(email: email, password: password) { errorMessage in
+                        DispatchQueue.main.async {
+                            if let error = errorMessage {
+                                loginErrorMessage = error
+                                print("Login error: \(error)")  // Debug statement
+                            } else {
+                                isLoggedIn = true
+                                print("Login successful, navigating to HomeView")  // Debug statement
+                            }
+                        }
+                    }
                 }) {
                     Text("Login")
                         .frame(maxWidth: .infinity)
@@ -51,9 +61,12 @@ struct LoginScreen: View {
                 }
                 .padding(.top, 20)
 
-                // Continue as Guest Button
+                if let errorMessage = loginErrorMessage {
+                    Text(errorMessage).foregroundColor(.red).padding()
+                }
+
                 Button(action: {
-                    isLoggedIn = true
+                    isLoggedIn = true // Log in as guest
                 }) {
                     Text("Continue as Guest")
                         .frame(maxWidth: .infinity)
@@ -65,9 +78,9 @@ struct LoginScreen: View {
                 }
                 .padding(.top, 10)
 
-                // Register Button
                 Button(action: {
                     showRegistration = true
+                    print("Registration sheet presented")  // Debug statement
                 }) {
                     Text("Register")
                         .foregroundColor(.blue)
@@ -80,27 +93,34 @@ struct LoginScreen: View {
                 HomeView()
             }
             .sheet(isPresented: $showRegistration) {
-                RegistrationView(showRegistration: $showRegistration)
+                RegistrationView(isLoggedIn: $isLoggedIn)
             }
         }
     }
 }
 
+
+// sheet pop up for registering new account
 struct RegistrationView: View {
-    @Binding var showRegistration: Bool
+    @Binding var isLoggedIn: Bool // Binding to control login status
     @State private var newEmail: String = ""
     @State private var newPassword: String = ""
+    @State private var reEnterPassword: String = ""
+    @State private var registrationErrorMessage: String? = nil
+    @State private var registrationSuccessMessage: String? = nil
+    
+    var authService = FirebaseAuthService()
     
     var body: some View {
         NavigationView {
             VStack {
-                // Registration form
                 TextField("Enter your email", text: $newEmail)
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(10)
                     .padding(.horizontal, 20)
                     .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
 
                 SecureField("Enter your password", text: $newPassword)
                     .padding()
@@ -108,9 +128,33 @@ struct RegistrationView: View {
                     .cornerRadius(10)
                     .padding(.horizontal, 20)
 
-                // Submit Button
+                SecureField("Re-enter your password", text: $reEnterPassword)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding(.horizontal, 20)
+
                 Button(action: {
-                    showRegistration = false
+                    if newPassword != reEnterPassword {
+                        registrationErrorMessage = "Passwords do not match."
+                        registrationSuccessMessage = nil
+                        print("Password mismatch")  // Debug statement
+                    } else {
+                        authService.registerUser(email: newEmail, password: newPassword) { errorMessage in
+                            DispatchQueue.main.async {
+                                if let error = errorMessage {
+                                    registrationErrorMessage = error
+                                    registrationSuccessMessage = nil
+                                    print("Registration error: \(error)")  // Debug statement
+                                } else {
+                                    registrationSuccessMessage = "Registration successful!"
+                                    registrationErrorMessage = nil
+                                    print("Registration successful, setting isLoggedIn to true")  // Debug statement
+                                    isLoggedIn = true  // Assuming this exists in RegistrationView
+                                }
+                            }
+                        }
+                    }
                 }) {
                     Text("Submit")
                         .frame(maxWidth: .infinity)
@@ -121,6 +165,12 @@ struct RegistrationView: View {
                         .padding(.horizontal, 20)
                 }
                 .padding(.top, 20)
+                
+                if let errorMessage = registrationErrorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
                 
                 Spacer()
             }
@@ -133,4 +183,3 @@ struct RegistrationView: View {
 #Preview {
     LoginScreen()
 }
-
