@@ -15,7 +15,14 @@ class SpinitronValues{
     init(){
         spins = []
     }
-    
+        
+    func fetchSpins(field:String, parameters:String) async throws -> [Spin]{
+        let URL = URL(string:"https://spinitron.com/api/spins?access-token=api-key")!
+        let (data, _) = try await URLSession.shared.data(from: URL)
+        let spins = try JSONDecoder().decode(Spins.self, from: data)
+        return spins.items
+    }
+
 }
 struct Spins:Decodable{
     var items : [Spin]
@@ -61,6 +68,7 @@ func fetchSpins() async throws -> [Spin]{
     let spins = try JSONDecoder().decode(Spins.self, from: data)
     return spins.items
 }
+
 
 
 
