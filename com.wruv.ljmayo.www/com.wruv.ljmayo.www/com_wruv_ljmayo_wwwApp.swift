@@ -20,12 +20,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct com_wruv_ljmayo_wwwApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var authService = FirebaseAuthService()
     
     var style = UIStyles()
     var body: some Scene {
         WindowGroup {
             // loading screen appears first
-            LoadingScreen().environmentObject(style)
-        }
+            LoadingScreen().environmentObject(style).environmentObject(authService)        }
     }
 }

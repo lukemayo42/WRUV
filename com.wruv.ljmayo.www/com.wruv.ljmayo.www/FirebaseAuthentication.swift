@@ -8,29 +8,34 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 
-class FirebaseAuthService {
+class FirebaseAuthService: ObservableObject {
     let db = Firestore.firestore()
+    @Published var currentUser: User?
     
-    // create new user
+    // Create new user
     func registerUser(email: String, password: String, completion: @escaping (String?) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                print("Registration error: \(error.localizedDescription)")
                 completion(error.localizedDescription)
             } else if let authResult = authResult {
-                // Save user data to Firestore's Accounts collection
+                // Create the User object
+                let chatName = email.split(separator: "@").first.map(String.init) ?? email
+                let newUser = User(email: email, chatName: chatName)
+                DispatchQueue.main.async {
+                    self.currentUser = newUser
+                }
+                
+                // save user data to Firestore
                 let userData: [String: Any] = [
                     "email": email,
-                    "uid": authResult.user.uid
+                    "uid": authResult.user.uid,
+                    "chatName": chatName
                 ]
                 self.db.collection("Accounts").document(authResult.user.uid).setData(userData) { error in
                     if let error = error {
-                        print("Firestore saving error: \(error.localizedDescription)")
                         completion(error.localizedDescription)
                     } else {
-                        // Registration success, calling completion on the main thread
                         DispatchQueue.main.async {
-                            print("Registration successful, user data saved to Accounts collection")
                             completion(nil)
                         }
                     }
@@ -39,8 +44,7 @@ class FirebaseAuthService {
         }
     }
 
-
-    // FirebaseAuthentication.swift
+    // Login user
     func loginUser(email: String, password: String, completion: @escaping (String?) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error as NSError? {
@@ -54,34 +58,54 @@ class FirebaseAuthService {
                 default:
                     completion(error.localizedDescription)
                 }
-            } else {
-                completion(nil) // No error means login successful
-            }
-        }
-    }
-    
-    
-    // Move account data from Accounts to Users collection
-        func moveAccountToUsersCollection(userId: String) {
-            let userDocRef = db.collection("Accounts").document(userId)
-            userDocRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-                    let userData = document.data() ?? [:]
-                    self.db.collection("Users").document(userId).setData(userData) { error in
-                        if let error = error {
-                            print("Error moving account data to Users: \(error.localizedDescription)")
-                        } else {
-                            // Optionally, delete the original account document
-                            userDocRef.delete { error in
-                                if let error = error {
-                                    print("Error deleting account data: \(error.localizedDescription)")
-                                }
-                            }
-                            print("User data moved to Users collection successfully.")
+            } else if let authResult = authResult {
+                // successfully logged in, now fetch user data from Firestore
+                let uid = authResult.user.uid
+                self.db.collection("Accounts").document(uid).getDocument { snapshot, error in
+                    if let error = error {
+                        completion("Error fetching user data: \(error.localizedDescription)")
+                    } else if let snapshot = snapshot, snapshot.exists {
+                        let data = snapshot.data() ?? [:]
+                        let email = data["email"] as? String ?? ""
+                        let chatName = data["chatName"] as? String ?? "No Chat Name"
+                        let loggedInUser = User(email: email, chatName: chatName)
+                        
+                        DispatchQueue.main.async {
+                            self.currentUser = loggedInUser
+                            completion(nil)
                         }
+                    } else {
+                        completion("User data not found in Firestore.")
                     }
                 }
             }
         }
-
+    }
+    
+    //grab current user if logged in
+    func fetchCurrentUser(completion: @escaping (String?) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            completion("No logged-in user.")
+            return
+        }
+            
+        db.collection("Accounts").document(uid).getDocument { snapshot, error in
+            if let error = error {
+                completion("Error fetching user data: \(error.localizedDescription)")
+            } else if let snapshot = snapshot, snapshot.exists {
+                let data = snapshot.data() ?? [:]
+                let email = data["email"] as? String ?? ""
+                let chatName = data["chatName"] as? String ?? "No Chat Name"
+                let fetchedUser = User(email: email, chatName: chatName)
+                
+                DispatchQueue.main.async {
+                    self.currentUser = fetchedUser
+                    completion(nil) // No error
+                }
+            } else {
+                completion("User data not found in Firestore.")
+            }
+        }
+    }
 }
+
