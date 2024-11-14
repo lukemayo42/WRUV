@@ -9,23 +9,40 @@ import UIKit
 
 import Foundation
 
-class SpinitronValues:ObservableObject{
+@MainActor class SpinitronValues:ObservableObject{
     // variables to hold data
     @Published var spins: [Spin] = []
     
     //asynchronus function to get latest spins
     //TODO: turn into generic function
-    func fetchSpins() async throws -> [Spin]{
-        let URL = URL(string:"https://spinitron.com/api/spins?access-token=xGRYmmG0rqj26gUzztBqVpjj")!
+    func fetchSpins<T:Decodable>(query: String) async throws -> T{
+        let URL = URL(string:"https://spinitron.com/api/\(query)access-token=token")!
         let (data, _) = try await URLSession.shared.data(from: URL)
-        let spins = try JSONDecoder().decode(Spins.self, from: data)
-        return spins.items
+        return try JSONDecoder().decode(T.self, from: data)
+        
     }
     
     //anync function to update structs spins to current
     // called by view to refrs
-    func refreshSpins() async {
-        self.spins = (try? await fetchSpins()) ?? [] }
+    @MainActor func refreshSpins() async {
+        do {
+            // Fetch the spins and decode it into a Spins object
+            let spinsTemp: Spins = try await fetchSpins(query: "spins?") // Ensure it's a Spins object
+            // Assign the items property to self.spins
+            self.spins = spinsTemp.items
+        } catch {
+            print("Failed to fetch spins: \(error)")
+            self.spins = [] // Set spins to an empty array in case of error
+        }
+    }
+    
+    @MainActor func refreshShows() async {
+        
+    }
+    
+    
+    
+        
     
     //fetches image based on url
     func fetchImage(url: String?) async throws -> Data?{
@@ -44,9 +61,6 @@ struct Spins:Decodable{
     
 }
 
-struct Shows: Decodable{
-    var items: [Show]
-}
 
 struct Spin: Decodable{
     let id = UUID()
@@ -58,7 +72,7 @@ struct Spin: Decodable{
     let released: Int?
     let song: String
     let time: String
-    let date: String
+    //let date: String
     
     enum CodingKeys: String, CodingKey{
         case image
@@ -69,7 +83,6 @@ struct Spin: Decodable{
         case released
         case song
         case time = "start"
-        case date = "end"
     }
     
 }
@@ -86,18 +99,17 @@ struct personasLink: Decodable{
     }
 }
 
+struct Shows: Decodable{
+    var items: [Show]
+}
+
 struct Show: Decodable{
     let start:String
     let end: String
     let title: String
 }
 
-func fetchSpins() async throws -> [Spin]{
-    let spinsURL = URL(string:"https://spinitron.com/api/spins?access-token=api-key")!
-    let (data, _) = try await URLSession.shared.data(from: spinsURL)
-    let spins = try JSONDecoder().decode(Spins.self, from: data)
-    return spins.items
-}
+
 
 
 

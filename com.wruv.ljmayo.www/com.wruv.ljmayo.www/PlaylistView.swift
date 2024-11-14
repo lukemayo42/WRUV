@@ -16,10 +16,9 @@ struct PlaylistView: View {
                 //Text("Recent Spins").font(.largeTitle)
                 List(spinitron.spins, id:\.id) { spin in
                     PlaylistRow(spin:spin)
-                    
                 }.task{
                     await spinitron.refreshSpins()
-                }
+                }.listStyle(.insetGrouped)
             }
                
         }
@@ -36,40 +35,50 @@ struct PlaylistRow: View{
         self.spin = spin
     }
     var body: some View{
-        HStack {
+        Section{
             //TODO: display time, need to format string
             //Text(spin.time)
             //Spacer()
-            if spin.image == nil{
-                Image("wruvlogo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .cornerRadius(10)
-            }else{
-                let imageURL = URL(string: spin.image!)
-                AsyncImage(url: imageURL, content: { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 60, height:60)
-    
-                            }, placeholder: {
-                                Image("wruvlogo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 50, height: 50)
-                                    .cornerRadius(10)
-                                
-                            })
+            HStack{
+                if spin.image == nil{
+                    Image("wruvlogo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .cornerRadius(10)
+                }else{
+                    let imageURL = URL(string: spin.image!)
+                    AsyncImage(url: imageURL, content: { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 60, height:60)
+                        
+                    }, placeholder: {
+                        Image("wruvlogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(10)
+                        
+                    })
+                }
+                VStack(alignment:.leading){
+                    if spin.release != nil{
+                        Text(spin.release!)
+                    }
+                    if spin.released != nil{
+                        Text(String(spin.released!))
+                    }
+                    
+                }.frame(alignment:.leading)
             }
-            Spacer()
-            VStack{
-                Text(spin.song)
-                Text(spin.artist)
-            }
-        }
-        .padding()
+        }header:{
+            Text("\(spin.song) - \(spin.artist)")
+        }footer: {
+            Text(spin.time)
+        }.headerProminence(.increased)
+
     }
 }
 
