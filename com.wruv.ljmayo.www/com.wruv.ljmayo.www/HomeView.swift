@@ -26,7 +26,7 @@ struct HomeView: View {
                     
                 }
             //Chat Screen Tab
-            tabGroup(view: AccountScreen()) //replace with chat screen
+            tabGroup(view: ChatScreen(username: "WRUVguy")) //replace with chat screen
                 .tabItem {
                     Image(systemName: "message.fill")
                     Text("Chat")
