@@ -9,21 +9,21 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var style: UIStyles
+    @EnvironmentObject var authService: FirebaseAuthService
     @Environment(\.colorScheme) var colorScheme
     @State private var playing: Bool =  false
-    //placeholder values
     @State private var showname: String = "radio show"
     @State private var djName: String = "DJ"
+    
     var body: some View {
         TabView {
-            //Home Screen Tab
+            // Home Screen Tab
             tabGroup(view: HomeScreen())
                 .tabItem {
                     Image(systemName: "music.house.fill")
                         .renderingMode(.template)
                         .foregroundColor(style.white)
                     Text("Home")
-                    
                 }
             //Chat Screen Tab
             tabGroup(view: ChatScreen(username: "WRUVguy")) //replace with chat screen
@@ -31,7 +31,7 @@ struct HomeView: View {
                     Image(systemName: "message.fill")
                     Text("Chat")
                 }
-            //Archives Screen Tab
+            // Archives Screen Tab
             tabGroup(view: ArchivesScreen())
                 .tabItem {
                     Image(systemName: "archivebox.fill")
@@ -43,26 +43,21 @@ struct HomeView: View {
                     Image(systemName: "person.fill")
                     Text("Account")
                 }
-            
-            }
-
+        }
     }
 
-    func tabGroup(view: some View) -> some View{
-        VStack{
+    func tabGroup(view: some View) -> some View {
+        VStack {
             view
-
-            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)//.frame(maxHeight:.infinity, alignment:.bottom)
+            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)
         }
-        .frame(maxWidth:.infinity, maxHeight:.infinity, alignment: .bottom)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .background(colorScheme == .dark ? style.black : style.white)
-
     }
 }
-
-
 
 #Preview {
     var style = UIStyles()
     HomeView().environmentObject(UIStyles())
 }
+
