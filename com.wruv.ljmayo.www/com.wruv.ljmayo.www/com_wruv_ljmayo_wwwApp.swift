@@ -11,7 +11,7 @@ import SwiftUI
 struct com_wruv_ljmayo_wwwApp: App {
     var style = UIStyles()
     var spinitron = SpinitronValues()
-    
+
     var body: some Scene {
         
         WindowGroup {

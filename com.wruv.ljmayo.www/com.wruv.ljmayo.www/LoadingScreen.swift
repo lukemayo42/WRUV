@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoadingScreen: View {
-    
+    @EnvironmentObject var spinitron: SpinitronValues
     @State var isActive: Bool = false
     
     var body: some View {
@@ -24,6 +24,8 @@ struct LoadingScreen: View {
                     .scaledToFit()
                     .frame(width: 350, height: 350)
             }
+        }.task{
+            await spinitron.refreshSpins()
         }
         .onAppear {
             // fade out after a few seconds

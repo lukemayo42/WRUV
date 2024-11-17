@@ -70,13 +70,12 @@ struct PlaylistRow: View{
                     if spin.released != nil{
                         Text(String(spin.released!))
                     }
-                    
-                }.frame(alignment:.leading)
+                }
             }
         }header:{
             Text("\(spin.song) - \(spin.artist)")
         }footer: {
-            Text(spin.time)
+            Text("\(spinitron.parseTime(time:spin.time))")
         }.headerProminence(.increased)
 
     }

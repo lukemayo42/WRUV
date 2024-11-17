@@ -7,10 +7,12 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    @EnvironmentObject var spintron: SpinitronValues
+    @EnvironmentObject var spinitron: SpinitronValues
     @State private var showPlaylist: Bool = false  // State to manage pop-up
     @State private var isPlaying: Bool = false
-
+    @State private var state = 0
+    var spin  =  "hello"
+    
     var body: some View {
         
         VStack {
@@ -49,15 +51,35 @@ struct HomeScreen: View {
             //Spacer()
             Button(action: { showPlaylist = true }) {
                 HStack {
-                    
-                    Image("SampleLogo1")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .cornerRadius(10)
+                    if spinitron.spins[0].image != nil{
+                        let imageURL = URL(string: spinitron.spins[0].image!)
+                        AsyncImage(url: imageURL, content: { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .cornerRadius(10)
+                            
+                        }, placeholder: {
+                            Image("wruvlogo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .cornerRadius(10)
+                            
+                        })
+                    }else{
+                        Image("wruvlogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(10)
+                    }
+
                     Spacer()
-                    Text("Peg - Steely Dan")
-                        .padding()
+                    Text(spinitron.getFirstSpin())
+                            .padding()
+       
                 }
                 .background(Color.blue)
                 .cornerRadius(10)
@@ -67,14 +89,16 @@ struct HomeScreen: View {
             }
             
         }
-        
+        .onAppear{
+            spinitron.startRepeatedFetch(query:spinitron.refreshSpins)
+            
+        }
     }
-        
-    
 }
 
 
 
 #Preview {
-    HomeView()
+    HomeView().environmentObject(UIStyles())
+        .environmentObject(SpinitronValues())
 }
