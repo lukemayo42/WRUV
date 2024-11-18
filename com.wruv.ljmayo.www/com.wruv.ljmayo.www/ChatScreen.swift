@@ -6,12 +6,29 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseCore
+import FirebaseFirestore
 
 struct ChatScreen: View {
     @State private var newMessageText: String = ""
     @State var messages: [Message] = []
     var username: String
     let CHATHEIGHT = 800.00
+    let chats = Firestore.firestore()
+    
+    func post(message: Message) async {
+        do {
+            try await chats.collection("Messages").document(message.id.uuidString).setData([
+                "message": message.text,
+                "timeSent": message.timeSent,
+                "user": message.sendingUser
+            ])
+            print("Message sent")
+        } catch {
+            print("Message not sent")
+        }
+    }
     
     var body: some View {
         VStack {
@@ -36,6 +53,8 @@ struct ChatScreen: View {
                     var newMessage = Message(text: newMessageText, sendingUser: username, timeSent: Date())
                     messages.append(newMessage)
                     newMessageText = ""
+                    
+                    
                 }
                 .frame(width: 350, alignment: .center)
         }
