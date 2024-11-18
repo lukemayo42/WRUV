@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var style: UIStyles
+    @EnvironmentObject var radioStream: RadioStream
     @EnvironmentObject var authService: FirebaseAuthService
     @Environment(\.colorScheme) var colorScheme
     @State private var playing: Bool =  false

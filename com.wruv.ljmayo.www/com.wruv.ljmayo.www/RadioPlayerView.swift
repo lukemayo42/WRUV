@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct RadioPlayerView: View {
     @EnvironmentObject var style : UIStyles
+    @EnvironmentObject var radioStream: RadioStream
     @Binding var playing:Bool
     @Binding var showname:String
     @Binding var djName:String
@@ -41,8 +43,10 @@ struct RadioPlayerView: View {
     func toggleButton(){
         if playing{
             playing = false
+            radioStream.pause()
         }else{
             playing = true
+            radioStream.play()
         }
     }
 }
@@ -50,5 +54,8 @@ struct RadioPlayerView: View {
 
 #Preview {
     var style = UIStyles()
-    HomeView().environmentObject(style)
+    HomeView()
+        .environmentObject(style)
+        .environmentObject(RadioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128.m3u"))
+    
 }

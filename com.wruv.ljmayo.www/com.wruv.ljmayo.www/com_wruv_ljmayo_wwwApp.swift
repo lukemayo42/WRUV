@@ -23,9 +23,14 @@ struct com_wruv_ljmayo_wwwApp: App {
     @StateObject private var authService = FirebaseAuthService()
     
     var style = UIStyles()
+    var radioStream = RadioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128")
     var body: some Scene {
         WindowGroup {
             // loading screen appears first
-            LoadingScreen().environmentObject(style).environmentObject(authService)        }
+            LoadingScreen()
+                .environmentObject(style)
+                .environmentObject(radioStream)
+                .environmentObject(authService)
+        }
     }
 }
