@@ -11,7 +11,8 @@ struct AccountScreen: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        VStack(alignment: .leading) {
+        Spacer(minLength: 70)
+        VStack {
             if let user = authService.currentUser {
                 Text("Welcome, \(user.chatName)")
                     .font(.largeTitle)
@@ -30,6 +31,7 @@ struct AccountScreen: View {
                     .font(.title)
                     .padding()
             }
+            Spacer()
         }
         .onAppear {
             authService.fetchCurrentUser { error in

@@ -84,26 +84,35 @@ class FirebaseAuthService: ObservableObject {
     
     //grab current user if logged in
     func fetchCurrentUser(completion: @escaping (String?) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            completion("No logged-in user.")
-            return
-        }
-            
-        db.collection("Accounts").document(uid).getDocument { snapshot, error in
-            if let error = error {
-                completion("Error fetching user data: \(error.localizedDescription)")
-            } else if let snapshot = snapshot, snapshot.exists {
-                let data = snapshot.data() ?? [:]
-                let email = data["email"] as? String ?? ""
-                let chatName = data["chatName"] as? String ?? "No Chat Name"
-                let fetchedUser = User(email: email, chatName: chatName)
-                
-                DispatchQueue.main.async {
-                    self.currentUser = fetchedUser
-                    completion(nil) // No error
+        // check if there's a logged-in Firebase user
+        if let uid = Auth.auth().currentUser?.uid {
+            db.collection("Accounts").document(uid).getDocument { snapshot, error in
+                if let error = error {
+                    completion("Error fetching user data: \(error.localizedDescription)")
+                } else if let snapshot = snapshot, snapshot.exists {
+                    let data = snapshot.data() ?? [:]
+                    let email = data["email"] as? String ?? ""
+                    let chatName = data["chatName"] as? String ?? "No Chat Name"
+                    let fetchedUser = User(email: email, chatName: chatName)
+                    
+                    DispatchQueue.main.async {
+                        self.currentUser = fetchedUser
+                        completion(nil)
+                    }
+                } else {
+                    completion("User data not found in Firestore.")
                 }
-            } else {
-                completion("User data not found in Firestore.")
+            }
+        }
+        // handle guest user session
+        else {
+            let randomGuestID = Int.random(in: 1000...9999)
+            let guestChatName = "guest\(randomGuestID)"
+            let guestUser = User(email: "guest@wruv.com", chatName: guestChatName)
+            
+            DispatchQueue.main.async {
+                self.currentUser = guestUser
+                completion(nil)
             }
         }
     }
