@@ -26,6 +26,7 @@ struct LoadingScreen: View {
             }
         }.task{
             await spinitron.refreshSpins()
+            await spinitron.refreshShows()
         }
         .onAppear {
             // fade out after a few seconds

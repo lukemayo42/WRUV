@@ -10,8 +10,9 @@ struct HomeScreen: View {
     @EnvironmentObject var spinitron: SpinitronValues
     @State private var showPlaylist: Bool = false  // State to manage pop-up
     @State private var isPlaying: Bool = false
-    @State private var state = 0
-    var spin  =  "hello"
+    
+    //@State private var state = 0
+    //var spin  =  "hello"
     
     var body: some View {
         
@@ -25,19 +26,16 @@ struct HomeScreen: View {
                 .padding()
             Text("Upcoming Shows")
             ScrollView {
-                VStack {
-                    
-                    Text("11/1 DJ: Example Show - Example Time")
-                    .padding()
-                    Text("11/2 DJ: Example Show - Example Time")
-                    .padding()
-                    Text("11/3 DJ: Example Show - Example Time")
-                    .padding()
-                    Text("11/4 DJ: Example Show - Example Time")
-                    .padding()
+                ForEach(spinitron.shows, id: \.id ){ show in
+                    HStack{
+                        Text(spinitron.parseTime(time:show.start!)).padding()
+                        Spacer()
+                        Text(show.title!)
+                        
+                        Spacer()
+                    }
                     
                 }
-                
             }
             .fullScreenCover(isPresented: $isPlaying) {
                 HomeView()
