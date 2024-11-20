@@ -116,7 +116,7 @@ import Foundation
             while true{
                 await query()
                 print("refresh")
-                try? await Task.sleep(nanoseconds: 20 * 1_000_000_000)
+                try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
             }
         }
     }
