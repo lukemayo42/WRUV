@@ -20,12 +20,12 @@ import Foundation
     private var apiKey: String {
       get {
         // 1
-        guard let filePath = Bundle.main.path(forResource: "spinitron-Info", ofType: "plist") else {
+        guard let filePath = Bundle.main.path(forResource: "spinitron-info", ofType: "plist") else {
           fatalError("Couldn't find file 'spinitron-Info.plist'.")
         }
         // 2
         let plist = NSDictionary(contentsOfFile: filePath)
-        guard let value = plist?.object(forKey: "Apikey") as? String else {
+        guard let value = plist?.object(forKey: "api-key") as? String else {
           fatalError("Couldn't find key 'API_KEY' in 'spinitron-Info.plist'.")
         }
         return value
@@ -116,7 +116,7 @@ import Foundation
             while true{
                 await query()
                 print("refresh")
-                try? await Task.sleep(nanoseconds: seconds * 1_000_000_000)
+                try? await Task.sleep(nanoseconds: UInt64(seconds) * 1_000_000_000)
             }
         }
     }
@@ -157,7 +157,7 @@ struct Spins:Decodable{
     
 }
 
-//clas to hod todays and tomorrows shows
+//class to hosd todays and tomorrows shows
 //used to ogranize shows into today and tomorrow
 class ShowModel{
     var today : [ShowValues]
