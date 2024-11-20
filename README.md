@@ -2,7 +2,7 @@
 Created by Lucas Mayo, Wade Bradford, Max Schwarz, and John Driscoll
 
 ## Overview
-WRUV is an iOS designed to stream live and previous radio shows hosted by the University of Vermont's student-run local radio station, WRUV. It provides users with the ability to listen to WRUV live streams and comment in a live text channel linked to a personal account.
+WRUV is an iOS app designed to stream live and previous radio shows hosted by the University of Vermont's student-run local radio station, WRUV. Programmed using Swift/SwiftUI, it provides users with the ability to listen to WRUV live streams and comment in a live text channel linked to a personal account.
 
 ## Views
 - Home Screen: Displays the WRUV logo and lists the upcoming schedule of shows.
