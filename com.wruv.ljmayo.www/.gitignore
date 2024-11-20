@@ -7,7 +7,7 @@ com.wruv.ljmayo.www.xcodeproj/project.xcworkspace/xcuserdata/
 xcuserdata/
 ## Obj-C/Swift specific
 *.hmap
-
+spinitron-Info.plist
 ## App packaging
 *.ipa
 *.dSYM.zip
