@@ -12,9 +12,9 @@ import Foundation
 @MainActor class SpinitronValues:ObservableObject{
     // variables to hold data
     @Published var spins: [Spin] = []
-    @Published var shows: [Show] = []
-    @Published var personas: [Persona] = []
-    //TODO: create struct to hold corresponding show info and personas to call in view
+    var isFetching = false
+    @Published var shows: ShowModel = ShowModel()
+    @Published var currShow: ShowValues = ShowValues(showName: "placeholder", djName: "placeholder", start: "placeholer")
     
     //get api-key from plist
     private var apiKey: String {
@@ -37,7 +37,8 @@ import Foundation
         self.dateParser.locale = Locale(identifier: "en_US_POSIX")
         self.dateParser.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
     }
-    //asynchronus function to get latest spins
+    
+    //generic T represents structs that decode the JSON returned by the url given as a parameter
     func fetchQuery<T:Decodable>(url: String) async throws -> T{
         let URL = URL(string:url)!
         let (data, _) = try await URLSession.shared.data(from: URL)
@@ -45,10 +46,13 @@ import Foundation
         
     }
     
-    //anync function to update structs spins to current
-    // called by view to refresh shows
+    // this function refreshed the spins
     @MainActor func refreshSpins() async {
+        guard !isFetching else { return }
+        
+        isFetching = true
         do {
+
             // Fetch the spins and decode it into a Spins object
             let spinsTemp: Spins = try await fetchQuery(url: getQueryURL(query:"spins?"))
             // Assign the items property to self.spins
@@ -58,40 +62,56 @@ import Foundation
             print("Failed to fetch spins: \(error)")
             self.spins = [] // Set spins to an empty array in case of error
         }
+        
+        isFetching = false
     }
     
+    //calls the api to refresh the shows and associated personas with the shows
     @MainActor func refreshShows() async {
+        guard !isFetching else { return }
+        isFetching = true
+        var showModelTemp : [ShowValues] = []
         do {
-            // Fetch the spins and decode it into a Spins object
-            let showsTemp: Shows = try await fetchQuery(url:getQueryURL(query: "shows?"))
-            // Assign the items property to self.spins
+            //format the date so that it can be included in the api query
+            // only get the shows in the next 24 hours to diplay
+            let currentDate = Date()
+            let calendar = Calendar.current
+            let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)
+            let dateFormatterTemp = DateFormatter()
+            dateFormatterTemp.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            dateFormatterTemp.timeZone = TimeZone(abbreviation: "UTC")
+            let formattedDate = dateFormatterTemp.string(from: nextDay!)
+            let urlFormattedDate = formattedDate
+                    .replacingOccurrences(of: ":", with: "%3A") // Replace ':' with '%3A'
+                    .replacingOccurrences(of: "+", with: "%2B")
             
-            self.shows = showsTemp.items
-            await getPersonas()
+            let showsTemp: Shows = try await fetchQuery(url:getQueryURL(query: "shows?end=\(urlFormattedDate)&"))
+            
+            var index = 0
+            //get the personas associated with the show (show api call gives the link to the associated persona to then call)
+            for show in showsTemp.items{
+                let personasTemp : Persona = try await fetchQuery(url: show.links!.personas[0].href)
+                index+=1
+                let showTemp = ShowValues(showName:show.title!, djName:personasTemp.name, start:show.start!)
+                showModelTemp.append(showTemp)
+            }
         } catch {
-            print("Failed to fetch spins: \(error)")
-            self.shows = [] // Set spins to an empty array in case of error
+            print("Failed to fetch shows: \(error)")
         }
-
+        currShow = showModelTemp[0]
+        showModelTemp.removeFirst()
+        
+        shows.addShows(shows: showModelTemp)
+        isFetching = false
     }
+    
+    //takes in a query and returns a url to call the api with the api-key
     private func getQueryURL(query: String) -> String{
         return "https://spinitron.com/api/\(query)access-token=\(apiKey)"
     }
-    private func getPersonas() async{
-        var index = 0
-        for show in shows{
-            do{
-                var personasTemp : PersonaResponse = try await fetchQuery(url: show.links!.personas[0].href)
-                self.personas[index] = personasTemp.items[0]
-                index+=1
-            }catch{
-                print("Error fetching personas: \(error)")
 
-            }
-        }
-    }
     //this function repeatedly calls a fetch function to refresh in the view
-    func startRepeatedFetch(query: @escaping ()async -> Void) {
+    func startRepeatedFetch(query: @escaping ()async -> Void, seconds: Int) {
         Task{
             while true{
                 await query()
@@ -100,7 +120,7 @@ import Foundation
             }
         }
     }
-    //converts time given by api to human readable time
+    //converts time given by api to regualar format ex. 12:13pm
     func parseTime(time:String)->String{
         let date = dateParser.date(from: time)
                 
@@ -113,6 +133,7 @@ import Foundation
 
     }
     
+    //returns the first spin as a string
     func getFirstSpin() -> String{
         return "\(spins[0].song) - \(spins[0].artist)"
         
@@ -129,12 +150,65 @@ import Foundation
     
 }
 
+
+//these structs are formated to be written to by the json's returned by the spinitron api
 struct Spins:Decodable{
     var items : [Spin]
     
 }
 
+//clas to hod todays and tomorrows shows
+//used to ogranize shows into today and tomorrow
+class ShowModel{
+    var today : [ShowValues]
+    
+    var tomorrow : [ShowValues]
+    let calendar = Calendar.current
+    var dater = DateFormatter()
 
+    
+    init(){
+        today = []
+        tomorrow = []
+        dater.locale = Locale(identifier: "en_US_POSIX")
+        dater.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+    }
+    //adds shows with todays date to today array
+    //adds shows with tomorrows data to tomorrow array
+    func addShows(shows: [ShowValues]){
+        let currentDate = Date()
+        var todayTemp : [ShowValues] = []
+        var tomorrowTemp : [ShowValues] = []
+        for show in shows{
+            //convert show.start to date
+            let showDate = dater.date(from: show.start)
+            if calendar.isDate(currentDate, inSameDayAs: showDate!){
+                
+                todayTemp.append(show)
+            }else{
+                tomorrowTemp.append(show)
+            }
+            
+        }
+        today = todayTemp
+        tomorrow = tomorrowTemp
+    }
+}
+
+
+class ShowValues{
+    let id = UUID()
+    var showName: String
+    var djName:String
+    var start:String
+    init(showName:String, djName: String, start:String){
+        self.showName = showName
+        self.djName = djName
+        self.start = start
+    }
+    
+    
+}
 struct Spin: Decodable{
     let id = UUID()
     let image : String?
@@ -171,11 +245,7 @@ struct PersonaResponse: Decodable {
 struct Persona: Decodable {
     let id: Int
     let name: String
-    let bio: String
-    let since: Int
-    let email: String
-    let website: String
-    let image: String
+
     
 }
 

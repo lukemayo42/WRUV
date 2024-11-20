@@ -11,30 +11,34 @@ struct HomeScreen: View {
     @State private var showPlaylist: Bool = false  // State to manage pop-up
     @State private var isPlaying: Bool = false
     
-    //@State private var state = 0
-    //var spin  =  "hello"
     
     var body: some View {
-        
         VStack {
-
-            
             Image("wruvlogo")
 
                 .resizable()
                 .frame(width: 100, height: 100)
                 .padding()
-            Text("Upcoming Shows")
+            Text("Upcoming Shows").font(.largeTitle)
             ScrollView {
-                ForEach(spinitron.shows, id: \.id ){ show in
+                Text("Today").bold()
+                ForEach(spinitron.shows.today, id: \.id ){ show in
                     HStack{
-                        Text(spinitron.parseTime(time:show.start!)).padding()
+                        Text(spinitron.parseTime(time:show.start)).padding()
                         Spacer()
-                        Text(show.title!)
-                        
+                        Text("\(show.showName) - \(show.djName)")
                         Spacer()
                     }
                     
+                }
+                Text("Tomorrow").bold()
+                ForEach(spinitron.shows.tomorrow, id: \.id ){ show in
+                    HStack{
+                        Text(spinitron.parseTime(time:show.start)).padding()
+                        Spacer()
+                        Text("\(show.showName) - \(show.djName)")
+                        Spacer()
+                    }
                 }
             }
             .fullScreenCover(isPresented: $isPlaying) {
@@ -43,8 +47,10 @@ struct HomeScreen: View {
             .sheet(isPresented: $showPlaylist) {
                 PlaylistView(showPlaylist: $showPlaylist)
             }
+        }.onAppear{
+            //call api every 12 minutes
+            spinitron.startRepeatedFetch(query:spinitron.refreshShows, seconds: 720)
         }
-        
         VStack{
             //Spacer()
             Button(action: { showPlaylist = true }) {
@@ -88,7 +94,8 @@ struct HomeScreen: View {
             
         }
         .onAppear{
-            spinitron.startRepeatedFetch(query:spinitron.refreshSpins)
+            //call api every 20 seconds
+            spinitron.startRepeatedFetch(query:spinitron.refreshSpins, seconds: 20)
             
         }
     }
