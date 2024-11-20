@@ -8,6 +8,13 @@ xcuserdata/
 ## Obj-C/Swift specific
 *.hmap
 spinitron-Info.plist
+GoogleService-Info.plist
+
+##package dependencies
+/.build/
+Package.resolved
+DerivedData/
+
 ## App packaging
 *.ipa
 *.dSYM.zip
