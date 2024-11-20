@@ -7,35 +7,39 @@
 import SwiftUI
 
 struct HomeScreen: View {
-
+    @EnvironmentObject var spinitron: SpinitronValues
     @State private var showPlaylist: Bool = false  // State to manage pop-up
     @State private var isPlaying: Bool = false
-
+    
+    
     var body: some View {
-        
         VStack {
-
-            
             Image("wruvlogo")
 
                 .resizable()
                 .frame(width: 100, height: 100)
                 .padding()
-            Text("Upcoming Shows")
+            Text("Upcoming Shows").font(.largeTitle)
             ScrollView {
-                VStack {
-                    
-                    Text("11/1 DJ: Example Show - Example Time")
-                    .padding()
-                    Text("11/2 DJ: Example Show - Example Time")
-                    .padding()
-                    Text("11/3 DJ: Example Show - Example Time")
-                    .padding()
-                    Text("11/4 DJ: Example Show - Example Time")
-                    .padding()
+                Text("Today").bold()
+                ForEach(spinitron.shows.today, id: \.id ){ show in
+                    HStack{
+                        Text(spinitron.parseTime(time:show.start)).padding()
+                        Spacer()
+                        Text("\(show.showName) - \(show.djName)")
+                        Spacer()
+                    }
                     
                 }
-                
+                Text("Tomorrow").bold()
+                ForEach(spinitron.shows.tomorrow, id: \.id ){ show in
+                    HStack{
+                        Text(spinitron.parseTime(time:show.start)).padding()
+                        Spacer()
+                        Text("\(show.showName) - \(show.djName)")
+                        Spacer()
+                    }
+                }
             }
             .fullScreenCover(isPresented: $isPlaying) {
                 HomeView()
@@ -43,21 +47,43 @@ struct HomeScreen: View {
             .sheet(isPresented: $showPlaylist) {
                 PlaylistView(showPlaylist: $showPlaylist)
             }
+        }.onAppear{
+            //call api every 12 minutes
+            spinitron.startRepeatedFetch(query:spinitron.refreshShows, seconds: 720)
         }
-        
         VStack{
             //Spacer()
             Button(action: { showPlaylist = true }) {
                 HStack {
-                    
-                    Image("SampleLogo1")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .cornerRadius(10)
+                    if spinitron.spins[0].image != nil{
+                        let imageURL = URL(string: spinitron.spins[0].image!)
+                        AsyncImage(url: imageURL, content: { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .cornerRadius(10)
+                            
+                        }, placeholder: {
+                            Image("wruvlogo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .cornerRadius(10)
+                            
+                        })
+                    }else{
+                        Image("wruvlogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(10)
+                    }
+
                     Spacer()
-                    Text("Peg - Steely Dan")
-                        .padding()
+                    Text(spinitron.getFirstSpin())
+                            .padding()
+       
                 }
                 .background(Color.blue)
                 .cornerRadius(10)
@@ -67,14 +93,17 @@ struct HomeScreen: View {
             }
             
         }
-        
+        .onAppear{
+            //call api every 20 seconds
+            spinitron.startRepeatedFetch(query:spinitron.refreshSpins, seconds: 20)
+            
+        }
     }
-        
-    
 }
 
 
 
 #Preview {
-    HomeView()
+    HomeView().environmentObject(UIStyles())
+        .environmentObject(SpinitronValues())
 }

@@ -10,11 +10,12 @@ import AVFoundation
 
 struct RadioPlayerView: View {
     @EnvironmentObject var style : UIStyles
+    @EnvironmentObject var spinitron: SpinitronValues
     @EnvironmentObject var radioStream: RadioStream
     @Binding var playing:Bool
     @Binding var showname:String
     @Binding var djName:String
-
+    
     var body: some View {
         ZStack{
             Rectangle().fill(style.black).frame(height:90)
@@ -35,7 +36,7 @@ struct RadioPlayerView: View {
                     }
                 }
                 HStack{
-                    Text("\(showname)\n \(djName)").foregroundColor(.white).bold().font(style.primaryFont(size:32.0))
+                    Text("\(spinitron.currShow.showName)\n \(spinitron.currShow.djName)").foregroundColor(.white).bold().font(style.primaryFont(size:24.0))
                 }
             }
         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
