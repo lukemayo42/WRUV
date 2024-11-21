@@ -23,7 +23,7 @@ struct com_wruv_ljmayo_wwwApp: App {
     @StateObject private var authService = FirebaseAuthService()
     
     var style = UIStyles()
-    var spinitron = SpinitronValues()
+    //var spinitron = SpinitronValues()
 
     var radioStream = RadioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128")
     var body: some Scene {
@@ -33,7 +33,7 @@ struct com_wruv_ljmayo_wwwApp: App {
             LoadingScreen()
                 .environmentObject(style)
 
-                .environmentObject(spinitron)
+                //.environmentObject(spinitron)
 
                 .environmentObject(radioStream)
                 .environmentObject(authService)

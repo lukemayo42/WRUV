@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    @EnvironmentObject var spinitron: SpinitronValues
+    //@EnvironmentObject var spinitron: SpinitronValues
     @State private var showPlaylist: Bool = false  // State to manage pop-up
     @State private var isPlaying: Bool = false
     
@@ -22,24 +22,24 @@ struct HomeScreen: View {
             Text("Upcoming Shows").font(.largeTitle)
             ScrollView {
                 Text("Today").bold()
-                ForEach(spinitron.shows.today, id: \.id ){ show in
-                    HStack{
-                        Text(spinitron.parseTime(time:show.start)).padding()
-                        Spacer()
-                        Text("\(show.showName) - \(show.djName)")
-                        Spacer()
-                    }
-                    
-                }
-                Text("Tomorrow").bold()
-                ForEach(spinitron.shows.tomorrow, id: \.id ){ show in
-                    HStack{
-                        Text(spinitron.parseTime(time:show.start)).padding()
-                        Spacer()
-                        Text("\(show.showName) - \(show.djName)")
-                        Spacer()
-                    }
-                }
+//                ForEach(spinitron.shows.today, id: \.id ){ show in
+//                    HStack{
+//                        Text(spinitron.parseTime(time:show.start)).padding()
+//                        Spacer()
+//                        Text("\(show.showName) - \(show.djName)")
+//                        Spacer()
+//                    }
+//                    
+//                }
+//                Text("Tomorrow").bold()
+//                ForEach(spinitron.shows.tomorrow, id: \.id ){ show in
+//                    HStack{
+//                        Text(spinitron.parseTime(time:show.start)).padding()
+//                        Spacer()
+//                        Text("\(show.showName) - \(show.djName)")
+//                        Spacer()
+//                    }
+//                }
             }
             .fullScreenCover(isPresented: $isPlaying) {
                 HomeView()
@@ -49,40 +49,40 @@ struct HomeScreen: View {
             }
         }.onAppear{
             //call api every 12 minutes
-            spinitron.startRepeatedFetch(query:spinitron.refreshShows, seconds: 720)
+//            spinitron.startRepeatedFetch(query:spinitron.refreshShows, seconds: 720)
         }
         VStack{
             //Spacer()
             Button(action: { showPlaylist = true }) {
                 HStack {
-                    if spinitron.spins[0].image != nil{
-                        let imageURL = URL(string: spinitron.spins[0].image!)
-                        AsyncImage(url: imageURL, content: { image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50, height: 50)
-                                .cornerRadius(10)
-                            
-                        }, placeholder: {
-                            Image("wruvlogo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50, height: 50)
-                                .cornerRadius(10)
-                            
-                        })
-                    }else{
-                        Image("wruvlogo")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                            .cornerRadius(10)
-                    }
+//                    if spinitron.spins[0].image != nil{
+//                        let imageURL = URL(string: spinitron.spins[0].image!)
+//                        AsyncImage(url: imageURL, content: { image in
+//                            image
+//                                .resizable()
+//                                .scaledToFit()
+//                                .frame(width: 50, height: 50)
+//                                .cornerRadius(10)
+//                            
+//                        }, placeholder: {
+//                            Image("wruvlogo")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .frame(width: 50, height: 50)
+//                                .cornerRadius(10)
+//                            
+//                        })
+//                    }else{
+//                        Image("wruvlogo")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 50, height: 50)
+//                            .cornerRadius(10)
+//                    }
 
                     Spacer()
-                    Text(spinitron.getFirstSpin())
-                            .padding()
+//                    Text(spinitron.getFirstSpin())
+//                            .padding()
        
                 }
                 .background(Color.blue)
@@ -95,7 +95,7 @@ struct HomeScreen: View {
         }
         .onAppear{
             //call api every 20 seconds
-            spinitron.startRepeatedFetch(query:spinitron.refreshSpins, seconds: 20)
+            //spinitron.startRepeatedFetch(query:spinitron.refreshSpins, seconds: 20)
             
         }
     }
@@ -105,5 +105,5 @@ struct HomeScreen: View {
 
 #Preview {
     HomeView().environmentObject(UIStyles())
-        .environmentObject(SpinitronValues())
+        //.environmentObject(SpinitronValues())
 }
