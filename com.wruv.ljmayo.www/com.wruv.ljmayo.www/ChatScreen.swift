@@ -13,24 +13,51 @@ import FirebaseFirestore
 struct ChatScreen: View {
     @State private var newMessageText: String = ""
     @State var messages: [Message] = []
+    @State var queryTime = Date()
     var username: String
     let CHATHEIGHT = 800.00
     let chats = Firestore.firestore()
-    
-    func post(message: Message) async {
+        
+    // Post a message
+    func post(message: Message) {
         do {
-            try await chats.collection("Messages").document(message.id.uuidString).setData([
+            chats.collection("Messages").document(message.id.uuidString).setData([
                 "message": message.text,
                 "timeSent": message.timeSent,
                 "user": message.sendingUser
             ])
             print("Message sent")
-        } catch {
-            print("Message not sent")
         }
     }
     
+    // Pull messages from the last time it was queried into messages list.
+    func pull() async {
+        do {
+            let messageQuery = try await chats.collection("Messages").whereField("timeSent", isGreaterThan: queryTime).getDocuments()
+            print("Gathered documents.")
+            
+            for message in messageQuery.documents {
+                var text = message["message"] as! String
+                var time = message["timeSent"] as! Firebase.Timestamp
+                var date = time.dateValue()
+                var user = message["user"] as! String
+                print(text, " ", date, " ", user)
+                messages.append(Message(text: text, sendingUser: user, timeSent: date))
+            }
+        } catch {
+            print("Error getting documents.")
+        }
+        queryTime = Date()
+    }
+    
     var body: some View {
+        // On a timer, pull new messages.
+        /*let timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
+            Task {
+                await pull()
+            }
+        }*/
+        
         VStack {
             ScrollView {
                 VStack(alignment: .leading) {
@@ -48,13 +75,15 @@ struct ChatScreen: View {
             }
             .background(Color.gray)
             
+            // On post: pull immediately, so that user sees their message appeal.
             TextField("Enter a new message here...", text: $newMessageText)
                 .onSubmit {
                     var newMessage = Message(text: newMessageText, sendingUser: username, timeSent: Date())
-                    messages.append(newMessage)
+                    post(message: newMessage)
                     newMessageText = ""
-                    
-                    
+                    Task {
+                        await pull()
+                    }
                 }
                 .frame(width: 350, alignment: .center)
         }
