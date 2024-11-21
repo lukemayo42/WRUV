@@ -72,20 +72,8 @@ import Foundation
         isFetching = true
         var showModelTemp : [ShowValues] = []
         do {
-            //format the date so that it can be included in the api query
-            // only get the shows in the next 24 hours to diplay
-            let currentDate = Date()
-            let calendar = Calendar.current
-            let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)
-            let dateFormatterTemp = DateFormatter()
-            dateFormatterTemp.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-            dateFormatterTemp.timeZone = TimeZone(abbreviation: "UTC")
-            let formattedDate = dateFormatterTemp.string(from: nextDay!)
-            let urlFormattedDate = formattedDate
-                    .replacingOccurrences(of: ":", with: "%3A") // Replace ':' with '%3A'
-                    .replacingOccurrences(of: "+", with: "%2B")
             
-            let showsTemp: Shows = try await fetchQuery(url:getQueryURL(query: "shows?end=\(urlFormattedDate)&"))
+            let showsTemp: Shows = try await fetchQuery(url:getQueryURL(query: "shows?end=\(getQueryDate(days:1))&"))
             
             var index = 0
             //get the personas associated with the show (show api call gives the link to the associated persona to then call)
@@ -104,10 +92,36 @@ import Foundation
         shows.addShows(shows: showModelTemp)
         isFetching = false
     }
-    
+    @MainActor func getPlaylists() async{
+        guard !isFetching else { return }
+        isFetching = true
+        do {
+            //TODO: see if we get a response from this call
+            let playlistsTemp : Playlists = try await fetchQuery(url: "playlists?start=\(getQueryDate(days:-7))&")
+            
+            
+        }catch{
+            print("Failed to get playlists: \(error)")
+        }
+    }
     //takes in a query and returns a url to call the api with the api-key
     private func getQueryURL(query: String) -> String{
         return "https://spinitron.com/api/\(query)access-token=\(apiKey)"
+    }
+    
+    //this formats a date to send to the api
+    //param -  number of days ahead or behind current date (negative for behind)
+    private func getQueryDate(days: Int) -> String{
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let nextDay = calendar.date(byAdding: .day, value: days, to: currentDate)
+        let dateFormatterTemp = DateFormatter()
+        dateFormatterTemp.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatterTemp.timeZone = TimeZone(abbreviation: "UTC")
+        let formattedDate = dateFormatterTemp.string(from: nextDay!)
+                .replacingOccurrences(of: ":", with: "%3A")
+                .replacingOccurrences(of: "+", with: "%2B")
+        return formattedDate
     }
 
     //this function repeatedly calls a fetch function to refresh in the view
@@ -138,26 +152,13 @@ import Foundation
         return "\(spins[0].song) - \(spins[0].artist)"
         
     }
-    //fetches image based on url
-    func fetchImage(url: String?) async throws -> Data?{
-        if url == nil{
-            return nil
-        }
-        let imageURL = URL(string: url!)
-        let (data, _) = try await URLSession.shared.data(from: imageURL!)
-        return data
-    }
-    
 }
 
 
 //these structs are formated to be written to by the json's returned by the spinitron api
-struct Spins:Decodable{
-    var items : [Spin]
-    
-}
 
-//class to hosd todays and tomorrows shows
+
+//class to hold todays and tomorrows shows
 //used to ogranize shows into today and tomorrow
 class ShowModel{
     var today : [ShowValues]
@@ -207,6 +208,11 @@ class ShowValues{
         self.start = start
     }
     
+    
+}
+
+struct Spins:Decodable{
+    var items : [Spin]
     
 }
 struct Spin: Decodable{
@@ -284,13 +290,26 @@ struct Link: Decodable {
 }
 
 
-// Links struct for self-referencing links
-struct Links: Decodable {
-    let selfLink: Link
+struct Playlists: Decodable{
+    var items: [Playlist]
+}
+
+struct Playlist: Decodable{
+    //let id = UUID()
+    let start: String
+    let end: String
+    let title: String
+    let links: playlistLinks
     
-    enum CodingKeys: String, CodingKey {
-        case selfLink = "self"
+    enum CodingKeys: String, CodingKey{
+        case start, end, title
+        case links = "_links"
     }
+}
+
+struct playlistLinks: Decodable{
+    let personas: Link
+    let spins: Link
 }
 
 
