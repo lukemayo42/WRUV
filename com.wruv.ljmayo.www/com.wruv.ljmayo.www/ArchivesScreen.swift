@@ -10,7 +10,8 @@ import SwiftUI
 struct ArchivesScreen: View {
     @EnvironmentObject var style : UIStyles
     @Environment(\.colorScheme) var colorScheme
-    @State private var searchText  = ""
+    @EnvironmentObject var spinitron: SpinitronValues
+    //@State private var searchText  = ""
     @State private var showList = ["askdhfkshdlkhas", "show 2", "show 3", "show 4", "show 5", "6", "7"]
     @State private var showText: String?
     var body: some View {
@@ -23,23 +24,23 @@ struct ArchivesScreen: View {
                 }
                 
                 ScrollView{
-                    ForEach(searchResults, id: \.self) { name in
-                        ArchiveShowView(showname:name, djName:"DJ")
+                    ForEach(spinitron.filterPlaylists, id: \.self) { playlist in
+                        ArchiveShowView(showname:playlist.showName, djName:playlist.djName)
                     }
                 }
                
             }
             .navigationTitle("Archives")
-        }.searchable(text: $searchText, prompt:"search")
+        }.searchable(text: $spinitron.searchText, prompt:"search")
             .frame(maxHeight:.infinity, alignment:.bottom)    }
-
-    var searchResults: [String] {
+/*
+    var searchResults: [PlaylistValues] {
         if searchText.isEmpty {
-            return showList
+            return spinitron.playlistModel
         } else {
-            return showList.filter { $0.contains(searchText) }
+            return spinitron.playlistModel.showName.filter { $0.contains(searchText) }
         }
-    }
+    }*/
 }
 
 #Preview {

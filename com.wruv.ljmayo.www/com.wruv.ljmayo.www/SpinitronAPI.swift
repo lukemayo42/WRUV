@@ -15,6 +15,8 @@ import Foundation
     var isFetching = false
     @Published var shows: ShowModel = ShowModel()
     @Published var currShow: ShowValues = ShowValues(showName: "placeholder", djName: "placeholder", start: "placeholer")
+    @Published var playlistModel: [PlaylistValues] = []
+    @Published var searchText: String = " "
     
     //get api-key from plist
     private var apiKey: String {
@@ -75,11 +77,9 @@ import Foundation
             
             let showsTemp: Shows = try await fetchQuery(url:getQueryURL(query: "shows?end=\(getQueryDate(days:1))&"))
             
-            var index = 0
             //get the personas associated with the show (show api call gives the link to the associated persona to then call)
             for show in showsTemp.items{
                 let personasTemp : Persona = try await fetchQuery(url: show.links!.personas[0].href)
-                index+=1
                 let showTemp = ShowValues(showName:show.title!, djName:personasTemp.name, start:show.start!)
                 showModelTemp.append(showTemp)
             }
@@ -95,16 +95,36 @@ import Foundation
     @MainActor func getPlaylists() async{
         guard !isFetching else { return }
         isFetching = true
+        var playlistModelTemp : [PlaylistValues] = []
         do {
+            print(getQueryURL(query:"playlists?start=\(getQueryDate(days:-7))&"))
             //TODO: see if we get a response from this call
-            let playlistsTemp : Playlists = try await fetchQuery(url: "playlists?start=\(getQueryDate(days:-7))&")
+            let playlistsTemp : Playlists = try await fetchQuery(url: getQueryURL(query:"playlists?start=\(getQueryDate(days:-7))&count=80&"))
             
             // get the personas
-            
+            for playlist in playlistsTemp.items{
+                let personasTemp : Persona = try await fetchQuery(url: playlist.links.persona.href)
+                let playlistTemp = PlaylistValues(showName: playlist.title, djName: personasTemp.name, start: parseTime(time:playlist.start), end:parseTime(time:playlist.end), playlistLink: playlist.links.spins.href, date: playlist.start)
+                
+                //do not add if its a repeat
+                //do not add if its automation
+                if playlistModelTemp.isEmpty{
+                    playlistModelTemp.append(playlistTemp)
+                }else{
+                    if playlistTemp.djName != "Program Director" && playlistModelTemp.last!.showName != playlistTemp.showName{
+                        playlistModelTemp.append(playlistTemp)
+                    }
+                }
+                
+                
+            }
             
         }catch{
             print("Failed to get playlists: \(error)")
         }
+        print(playlistModelTemp[1].archivesLink)
+        playlistModel = playlistModelTemp
+        isFetching = false
     }
     //takes in a query and returns a url to call the api with the api-key
     private func getQueryURL(query: String) -> String{
@@ -150,8 +170,20 @@ import Foundation
     }
     
     //returns the first spin as a string
-    func getFirstSpin() -> String{
+    public func getFirstSpin() -> String{
         return "\(spins[0].song) - \(spins[0].artist)"
+        
+    }
+    
+    var filterPlaylists : [PlaylistValues]{
+        if searchText.isEmpty{
+            return playlistModel
+        }else{
+            return playlistModel.filter{ playlist in
+                playlist.showName.localizedCaseInsensitiveContains(searchText) || playlist.djName.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+        
         
     }
 }
@@ -197,45 +229,49 @@ class ShowModel{
         tomorrow = tomorrowTemp
     }
 }
-//class to hold playlists
-class playlistModel{
-    let today : [playlistValues] = []
-    let yesterday: [playlistValues] = []
-    let day3: [playlistValues] = []
-    let day4: [playlistValues] = []
-    let day5: [playlistValues] = []
-    let day6: [playlistValues] = []
-    let day7: [playlistValues] = []
-}
 
 //struct to hold all values of a playlist
-struct playlistValues{
+struct PlaylistValues:Hashable{
     let id = UUID()
     let showName: String
     let djName: String
     let start: String
     let end: String
-    let day: String
-    let archivesLink: String
+    var archivesLink: String  = " "
     let playlistLink: String
-    let date: String
-    init(showName: String, djName:String, start: String, end:String, day:String, playlistLink: String, archivesLink: String){
+    var date: String
+    //let date: String
+    init(showName: String, djName:String, start: String, end:String, playlistLink: String, date: String){
         self.showName = showName
         self.djName = djName
         self.start = start
         self.end = end
-        self.day = day
         self.playlistLink = playlistLink
-        self.archivesLink = archivesLink
-    }
-    private func generateArchivesLink(start:String, showName:String, day: String, djName:String){
-        //use the spinitron api values to get the
-    }
-    private func getDate(time: String){
-        let dayFormatter = DateFormatter()
-        dayFormatter.dateFormat = "EEEE"
-        dayFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        self.date = date
+        self.archivesLink = generateArchivesLink(time:date, showName: showName, djName: djName)
         
+    }
+    private func generateArchivesLink(time:String, showName:String,djName:String)->String{
+        //convert date into date in archives link
+        //convert the date from string to date in format given by api
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        let date = dateFormatter.date(from: time)
+        
+        //convert back from date to string in format readable by the archives
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "yyyy-MM-dd_HHmm'h'_EEE"
+        outputFormatter.timeZone = TimeZone(abbreviation: "EST")
+        let dateStr = outputFormatter.string(from: date!)
+        
+        
+        //replace whitespcae with underscores
+        let showNameUnderscore = showName.replacingOccurrences(of: " ", with: "_")
+        let djNameUnderscore = djName.replacingOccurrences(of: " ", with: "_")
+        
+        //return in archives format
+        return "\(dateStr)-\(showNameUnderscore)_with_\(djNameUnderscore).mp3"
     }
 }
 
@@ -298,8 +334,6 @@ struct Persona: Decodable {
 }
 
 
-
-
 // Show response
 struct Shows: Decodable {
     let items: [Show]
@@ -350,7 +384,7 @@ struct Playlist: Decodable{
 }
 
 struct playlistLinks: Decodable{
-    let personas: Link
+    let persona: Link
     let spins: Link
 }
 
