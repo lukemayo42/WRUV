@@ -116,5 +116,24 @@ class FirebaseAuthService: ObservableObject {
             }
         }
     }
+    
+    func updateChatName(newName: String, completion: @escaping (String?) -> Void) {
+        guard let currentUser = currentUser, let uid = Auth.auth().currentUser?.uid else {
+            completion("No logged-in user.")
+            return
+        }
+        
+        let userData: [String: Any] = ["chatName": newName]
+        db.collection("Accounts").document(uid).updateData(userData) { error in
+            if let error = error {
+                completion("Failed to update chat name: \(error.localizedDescription)")
+            } else {
+                DispatchQueue.main.async {
+                    self.currentUser?.chatName = newName
+                }
+                completion(nil)
+            }
+        }
+    }
 }
 
