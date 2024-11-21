@@ -99,6 +99,8 @@ import Foundation
             //TODO: see if we get a response from this call
             let playlistsTemp : Playlists = try await fetchQuery(url: "playlists?start=\(getQueryDate(days:-7))&")
             
+            // get the personas
+            
             
         }catch{
             print("Failed to get playlists: \(error)")
@@ -195,7 +197,47 @@ class ShowModel{
         tomorrow = tomorrowTemp
     }
 }
+//class to hold playlists
+class playlistModel{
+    let today : [playlistValues] = []
+    let yesterday: [playlistValues] = []
+    let day3: [playlistValues] = []
+    let day4: [playlistValues] = []
+    let day5: [playlistValues] = []
+    let day6: [playlistValues] = []
+    let day7: [playlistValues] = []
+}
 
+//struct to hold all values of a playlist
+struct playlistValues{
+    let id = UUID()
+    let showName: String
+    let djName: String
+    let start: String
+    let end: String
+    let day: String
+    let archivesLink: String
+    let playlistLink: String
+    let date: String
+    init(showName: String, djName:String, start: String, end:String, day:String, playlistLink: String, archivesLink: String){
+        self.showName = showName
+        self.djName = djName
+        self.start = start
+        self.end = end
+        self.day = day
+        self.playlistLink = playlistLink
+        self.archivesLink = archivesLink
+    }
+    private func generateArchivesLink(start:String, showName:String, day: String, djName:String){
+        //use the spinitron api values to get the
+    }
+    private func getDate(time: String){
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "EEEE"
+        dayFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        
+    }
+}
 
 class ShowValues{
     let id = UUID()
