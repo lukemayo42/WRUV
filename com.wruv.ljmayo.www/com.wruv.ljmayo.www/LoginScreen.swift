@@ -1,4 +1,5 @@
 import SwiftUI
+import FirebaseAuth
 
 struct LoginScreen: View {
     @State private var email: String = ""
@@ -66,7 +67,12 @@ struct LoginScreen: View {
                 }
 
                 Button(action: {
-                    isLoggedIn = true // Log in as guest
+                    do {
+                        try Auth.auth().signOut()
+                    } catch let signOutError {
+                        print("Error signing out: \(signOutError.localizedDescription)")
+                    }
+                    isLoggedIn = true
                 }) {
                     Text("Continue as Guest")
                         .frame(maxWidth: .infinity)
