@@ -15,6 +15,7 @@ import Foundation
     var isFetching = false
     @Published var shows: ShowModel = ShowModel()
     @Published var currShow: ShowValues = ShowValues(showName: "placeholder", djName: "placeholder", start: "placeholer")
+    @Published var currArchive:PlaylistValues = PlaylistValues(showName: "placeholder", djName: "placeholder", start: "placeholer", end:"placeholder", playlistLink: "placeholder", date: "placeholder")
     @Published var playlistModel: [PlaylistValues] = []
     @Published var searchText: String = " "
     
@@ -263,15 +264,20 @@ struct PlaylistValues:Hashable{
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = "yyyy-MM-dd_HHmm'h'_EEE"
         outputFormatter.timeZone = TimeZone(abbreviation: "EST")
-        let dateStr = outputFormatter.string(from: date!)
+        if date != nil{
+            let dateStr = outputFormatter.string(from: date!)
+            
+            
+            //replace whitespcae with underscores
+            let showNameUnderscore = showName.replacingOccurrences(of: " ", with: "_")
+            let djNameUnderscore = djName.replacingOccurrences(of: " ", with: "_")
+            
+            //return in archives format
+            return "\(dateStr)-\(showNameUnderscore)_with_\(djNameUnderscore).mp3"
+        }else{
+            return "error"
+        }
         
-        
-        //replace whitespcae with underscores
-        let showNameUnderscore = showName.replacingOccurrences(of: " ", with: "_")
-        let djNameUnderscore = djName.replacingOccurrences(of: " ", with: "_")
-        
-        //return in archives format
-        return "\(dateStr)-\(showNameUnderscore)_with_\(djNameUnderscore).mp3"
     }
 }
 
