@@ -9,12 +9,15 @@ import SwiftUI
 
 struct ArchiveShowView: View {
     @EnvironmentObject var style : UIStyles
-    @State private var playing:Bool = false
-    private var showname:String
-    private var djName:String
-    init(showname:String, djName:String){
-        self.showname = showname
-        self.djName = djName
+    @EnvironmentObject var radioStream: AudioStream
+    @EnvironmentObject var archivesStream: AudioStream
+    //@Binding var archivesPlaying:Bool
+    //@Binding var radioPlaying: Bool
+    //private var showname:String
+    //private var djName:String
+    private var archivedShow: PlaylistValues
+    init(show: PlaylistValues){
+        self.archivedShow = show
     }
 
     var body: some View {
@@ -37,7 +40,7 @@ struct ArchiveShowView: View {
                         Circle()
                            .fill(style.darkGray)
                             .frame(height: 50)
-                        if playing{
+                       if archivesStream.isPlaying{
                             Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }else{
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
@@ -45,7 +48,7 @@ struct ArchiveShowView: View {
                     }
                 }
                 HStack{
-                    Text("\(showname)\n \(djName)").foregroundColor(style.white).bold().font(style.primaryFont(size:24.0))
+                    Text("\(archivedShow.showName)\n \(archivedShow.djName)").foregroundColor(style.white).bold().font(style.primaryFont(size:24.0))
                         .frame(height: 70)
                         .truncationMode(.tail)
                 }.padding()
@@ -53,10 +56,29 @@ struct ArchiveShowView: View {
         }
     }
     func toggleButton(){
-        if playing{
-            playing = false
+        if archivesStream.isPlaying{
+            //archivesPlaying = false
+            archivesStream.pause()
         }else{
-            playing = true
+            //if another archived show is playing the
+            //check what the archiveShow stream url is
+            if archivesStream.url == archivedShow.archivesLink{
+                //check if the radiostream is playing
+                if radioStream.isPlaying{
+                    //radioPlaying = false
+                    radioStream.pause()
+                }
+                //archivesPlaying = true
+                archivesStream.play()
+            }else{
+                archivesStream.pause()
+                //initialize the ArchivesStream with the correct link
+                archivesStream.url = "https://www.uvm.edu/~wruv/res/thisweek/\(archivedShow.archivesLink)"
+                archivesStream.initializeAudio()
+                archivesStream.play()
+                //archivesPlaying = true
+                }
+            
         }
     }
 }

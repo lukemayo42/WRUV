@@ -11,10 +11,12 @@ import AVFoundation
 struct RadioPlayerView: View {
     @EnvironmentObject var style : UIStyles
     @EnvironmentObject var spinitron: SpinitronValues
-    @EnvironmentObject var radioStream: RadioStream
-    @Binding var playing:Bool
+    @EnvironmentObject var radioStream: AudioStream
+    @EnvironmentObject var archivesStream: AudioStream
+    @Binding var radioPlaying:Bool
     @Binding var showname:String
     @Binding var djName:String
+    @Binding var archivesPlaying: Bool
     
     var body: some View {
         ZStack{
@@ -36,7 +38,7 @@ struct RadioPlayerView: View {
                         Circle()
                            .fill(style.darkGray)
                             .frame(height: 50)
-                        if playing{
+                       if radioPlaying{
                             Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }else{
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
@@ -54,12 +56,20 @@ struct RadioPlayerView: View {
         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
     }
     func toggleButton(){
-        if playing{
-            playing = false
+        if radioStream.isPlaying{
+            radioPlaying = false
             radioStream.pause()
         }else{
-            playing = true
-            radioStream.play()
+            //if the archives are playing stop the archives stream and start the radioStream
+            if archivesStream.isPlaying{
+                archivesStream.pause()
+                radioPlaying = true
+                radioStream.play()
+            }else{
+                radioPlaying = true
+                radioStream.play()
+            }
+            
         }
     }
 }
@@ -69,6 +79,6 @@ struct RadioPlayerView: View {
     var style = UIStyles()
     HomeView()
         .environmentObject(style)
-        .environmentObject(RadioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128.m3u"))
+        //.environmentObject(AudioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128.m3u"))
     
 }

@@ -10,10 +10,11 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var style: UIStyles
     @EnvironmentObject var spintron: SpinitronValues
-    @EnvironmentObject var radioStream: RadioStream
+    @EnvironmentObject var radioStream: AudioStream
     @EnvironmentObject var authService: FirebaseAuthService
     @Environment(\.colorScheme) var colorScheme
-    @State private var playing: Bool =  false
+    @State private var radioPlaying: Bool =  false
+    @State private var archivesPlaying: Bool = false
     @State private var showname: String = "radio show"
     @State private var djName: String = "DJ"
     
@@ -51,7 +52,7 @@ struct HomeView: View {
     func tabGroup(view: some View) -> some View {
         VStack {
             view
-            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)
+            RadioPlayerView(radioPlaying:$radioPlaying, showname:$showname, djName:$djName, archivesPlaying: $archivesPlaying)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .background(colorScheme == .dark ? style.black : style.white)

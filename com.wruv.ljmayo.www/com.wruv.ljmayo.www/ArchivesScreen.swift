@@ -12,8 +12,9 @@ struct ArchivesScreen: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var spinitron: SpinitronValues
     //@State private var searchText  = ""
-    @State private var showList = ["askdhfkshdlkhas", "show 2", "show 3", "show 4", "show 5", "6", "7"]
-    @State private var showText: String?
+    
+
+    //@State private var showText: String?
     var body: some View {
         NavigationStack {
             ZStack{
@@ -25,7 +26,7 @@ struct ArchivesScreen: View {
                 
                 ScrollView{
                     ForEach(spinitron.filterPlaylists, id: \.self) { playlist in
-                        ArchiveShowView(showname:playlist.showName, djName:playlist.djName)
+                        ArchiveShowView(show: playlist)
                     }
                 }
                
