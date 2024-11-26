@@ -20,14 +20,7 @@ struct RadioPlayerView: View {
         ZStack{
             Rectangle().fill(style.black).frame(height:90)
             HStack{
-                HStack{
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.blue)
-                        .padding(.leading, 10)
-                    Text("Live").foregroundColor(.white)
-                        //.padding(.leading, 10)
-                }
-                Spacer()
+                //Spacer()
                 Button(action: toggleButton){
                    ZStack{
                         Circle()
@@ -42,12 +35,13 @@ struct RadioPlayerView: View {
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }
                     }
-                   .padding(.leading, 10)
+                   .padding(.leading, 40)
                 }
                 Spacer()
                 HStack{
-                    Text("\(spinitron.currShow.showName)\n \(spinitron.currShow.djName)").foregroundColor(.white).bold().font(style.primaryFont(size:24.0))
+                    Text("\(spinitron.currShow.showName)\n \(spinitron.currShow.djName)").foregroundColor(.white).font(style.primaryFont(size:24.0))
                 }
+                .padding(.trailing, 30)
                 
             }
             

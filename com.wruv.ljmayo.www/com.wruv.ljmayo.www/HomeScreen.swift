@@ -63,6 +63,7 @@ struct HomeScreen: View {
                                 .scaledToFit()
                                 .frame(width: 50, height: 50)
                                 .cornerRadius(10)
+                                .padding(5)
                             
                         }, placeholder: {
                             Image("wruvlogo")
@@ -70,6 +71,7 @@ struct HomeScreen: View {
                                 .scaledToFit()
                                 .frame(width: 50, height: 50)
                                 .cornerRadius(10)
+                                .padding(5)
                             
                         })
                     }else{
@@ -78,7 +80,9 @@ struct HomeScreen: View {
                             .scaledToFit()
                             .frame(width: 50, height: 50)
                             .cornerRadius(10)
+                            .padding(5)
                     }
+                    
 
                     Spacer()
                     Text(spinitron.getFirstSpin())

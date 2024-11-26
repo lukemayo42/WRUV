@@ -47,6 +47,7 @@ struct HomeView: View {
                 }
         }
     }
+    
 
     func tabGroup(view: some View) -> some View {
         VStack {

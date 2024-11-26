@@ -53,6 +53,7 @@ struct PlaylistRow: View{
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60, height:60)
+                            .cornerRadius(10)
                         
                     }, placeholder: {
                         Image("wruvlogo")
