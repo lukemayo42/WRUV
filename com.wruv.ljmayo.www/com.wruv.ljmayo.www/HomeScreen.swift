@@ -27,6 +27,8 @@ struct HomeScreen: View {
                         Text(spinitron.parseTime(time:show.start)).padding()
                         Spacer()
                         Text("\(show.showName) - \(show.djName)")
+                            .lineLimit(2) // Limit lines
+                            .multilineTextAlignment(.center) // Center align text
                         Spacer()
                     }
                     
@@ -37,6 +39,8 @@ struct HomeScreen: View {
                         Text(spinitron.parseTime(time:show.start)).padding()
                         Spacer()
                         Text("\(show.showName) - \(show.djName)")
+                            .lineLimit(2) // Limit lines
+                            .multilineTextAlignment(.center) // Center align text
                         Spacer()
                     }
                 }

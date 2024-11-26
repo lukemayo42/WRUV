@@ -40,6 +40,8 @@ struct RadioPlayerView: View {
                 Spacer()
                 HStack{
                     Text("\(spinitron.currShow.showName)\n \(spinitron.currShow.djName)").foregroundColor(.white).font(style.primaryFont(size:24.0))
+                        .lineLimit(2) // Limit lines
+                        .multilineTextAlignment(.center) // Center align text
                 }
                 .padding(.trailing, 30)
                 
