@@ -38,7 +38,7 @@ struct RadioPlayerView: View {
                         Circle()
                            .fill(style.darkGray)
                             .frame(height: 50)
-                       if radioPlaying{
+                       if radioStream.isPlaying{
                             Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }else{
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
@@ -57,16 +57,16 @@ struct RadioPlayerView: View {
     }
     func toggleButton(){
         if radioStream.isPlaying{
-            radioPlaying = false
+            radioStream.isPlaying = false
             radioStream.pause()
         }else{
             //if the archives are playing stop the archives stream and start the radioStream
             if archivesStream.isPlaying{
                 archivesStream.pause()
-                radioPlaying = true
+                radioStream.isPlaying = true
                 radioStream.play()
             }else{
-                radioPlaying = true
+                radioStream.isPlaying = true
                 radioStream.play()
             }
             

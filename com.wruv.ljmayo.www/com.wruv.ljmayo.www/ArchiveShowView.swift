@@ -11,7 +11,7 @@ struct ArchiveShowView: View {
     @EnvironmentObject var style : UIStyles
     @EnvironmentObject var radioStream: AudioStream
     @EnvironmentObject var archivesStream: AudioStream
-    //@Binding var archivesPlaying:Bool
+    //Binding var archivesPlaying:Bool
     //@Binding var radioPlaying: Bool
     //private var showname:String
     //private var djName:String
@@ -56,6 +56,10 @@ struct ArchiveShowView: View {
         }
     }
     func toggleButton(){
+        //if {
+            
+        
+        /*
         if archivesStream.isPlaying{
             //archivesPlaying = false
             archivesStream.pause()
@@ -80,6 +84,7 @@ struct ArchiveShowView: View {
                 }
             
         }
+         */
     }
 }
 

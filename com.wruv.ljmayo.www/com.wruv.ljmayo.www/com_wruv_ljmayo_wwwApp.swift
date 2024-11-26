@@ -25,9 +25,9 @@ struct com_wruv_ljmayo_wwwApp: App {
     var style = UIStyles()
     var spinitron = SpinitronValues()
 
-    var radioStream = AudioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128", name:"RadioStream")
+    var radioStream = AudioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128")
     //placeholder url will be replaced when archived show is played (links are obtained after api call)
-    var archivesStream = AudioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128", name:"ArchivesStream")
+    //var archivesStream = AudioStream(url:"http://icecast.uvm.edu:8005/wruv_fm_128")
 
     var body: some Scene {
         
@@ -38,7 +38,7 @@ struct com_wruv_ljmayo_wwwApp: App {
                 .environmentObject(spinitron)
                 .environmentObject(radioStream)
                 .environmentObject(authService)
-                .environmentObject(archivesStream)
+                //.environmentObject(archivesStream)
 
         }
     }

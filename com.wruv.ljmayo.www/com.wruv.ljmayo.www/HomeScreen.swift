@@ -9,7 +9,7 @@ import SwiftUI
 struct HomeScreen: View {
     @EnvironmentObject var spinitron: SpinitronValues
     @State private var showPlaylist: Bool = false  // State to manage pop-up
-    @State private var isPlaying: Bool = false
+    @State private var isPresented: Bool = false
     
     
     var body: some View {
@@ -41,7 +41,7 @@ struct HomeScreen: View {
                     }
                 }
             }
-            .fullScreenCover(isPresented: $isPlaying) {
+            .fullScreenCover(isPresented: $isPresented) {
                 HomeView()
             }
             .sheet(isPresented: $showPlaylist) {
