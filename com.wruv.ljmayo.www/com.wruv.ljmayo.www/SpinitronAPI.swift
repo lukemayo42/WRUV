@@ -123,7 +123,8 @@ import Foundation
         }catch{
             print("Failed to get playlists: \(error)")
         }
-        print(playlistModelTemp[1].archivesLink)
+        //print(playlistModelTemp[1].archivesLink)
+        playlistModelTemp.removeFirst()
         playlistModel = playlistModelTemp
         isFetching = false
     }
