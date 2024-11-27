@@ -65,15 +65,15 @@ struct ChatScreen: View {
                         ForEach(messages) { message in
                             Text("\(message.sendingUser): \(message.text)")
                                 .listRowSeparator(.hidden)
-                                .listRowBackground(Color.gray)
+                                //.listRowBackground(Color.gray)
                         }
                     }
                     .listStyle(.inset)
-                    .background(Color.gray)
+                    //.background(Color.gray)
                     .frame(height: min(CHATHEIGHT, 44.0 * Double(messages.count)))
                 }
             }
-            .background(Color.gray)
+            //.background(Color.gray)
             
             // On post: pull immediately, so that user sees their message appeal.
             TextField("Enter a new message here...", text: $newMessageText)
@@ -87,7 +87,7 @@ struct ChatScreen: View {
                 }
                 .frame(width: 350, alignment: .center)
         }
-        .background(Color.gray)
+        //.background(Color.gray)
     }
 }
 

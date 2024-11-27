@@ -32,9 +32,7 @@ struct com_wruv_ljmayo_wwwApp: App {
             // loading screen appears first
             LoadingScreen()
                 .environmentObject(style)
-
                 .environmentObject(spinitron)
-
                 .environmentObject(radioStream)
                 .environmentObject(authService)
 

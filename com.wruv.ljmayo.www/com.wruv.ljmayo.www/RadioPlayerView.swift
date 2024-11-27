@@ -20,6 +20,7 @@ struct RadioPlayerView: View {
         ZStack{
             Rectangle().fill(style.black).frame(height:90)
             HStack{
+                //Spacer()
                 Button(action: toggleButton){
                    ZStack{
                         Circle()
@@ -34,11 +35,18 @@ struct RadioPlayerView: View {
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }
                     }
+                   .padding(.leading, 40)
                 }
+                Spacer()
                 HStack{
-                    Text("\(spinitron.currShow.showName)\n \(spinitron.currShow.djName)").foregroundColor(.white).bold().font(style.primaryFont(size:24.0))
+                    Text("\(spinitron.currShow.showName)\n \(spinitron.currShow.djName)").foregroundColor(.white).font(style.primaryFont(size:24.0))
+                        .lineLimit(2) // Limit lines
+                        .multilineTextAlignment(.center) // Center align text
                 }
+                .padding(.trailing, 30)
+                
             }
+            
         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
     }
     func toggleButton(){

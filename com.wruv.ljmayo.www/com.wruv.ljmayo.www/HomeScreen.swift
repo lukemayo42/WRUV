@@ -22,22 +22,37 @@ struct HomeScreen: View {
             Text("Upcoming Shows").font(.largeTitle)
             ScrollView {
                 Text("Today").bold()
-                ForEach(spinitron.shows.today, id: \.id ){ show in
-                    HStack{
-                        Text(spinitron.parseTime(time:show.start)).padding()
-                        Spacer()
-                        Text("\(show.showName) - \(show.djName)")
-                        Spacer()
+                Grid {
+                    ForEach(spinitron.shows.today, id: \.id) { show in
+                        GridRow {
+                            Text(spinitron.parseTime(time: show.start))
+                                .padding()
+                            VStack {
+                                Spacer()
+                                Text("\(show.showName) - \(show.djName)")
+                                    .lineLimit(2) // Limit lines
+                                    .multilineTextAlignment(.center) // Center align text
+                                    .padding()
+                                Spacer()
+                            }
+                        }
                     }
-                    
                 }
                 Text("Tomorrow").bold()
-                ForEach(spinitron.shows.tomorrow, id: \.id ){ show in
-                    HStack{
-                        Text(spinitron.parseTime(time:show.start)).padding()
-                        Spacer()
-                        Text("\(show.showName) - \(show.djName)")
-                        Spacer()
+                Grid {
+                    ForEach(spinitron.shows.tomorrow, id: \.id) { show in
+                        GridRow {
+                            Text(spinitron.parseTime(time: show.start))
+                                .padding()
+                            VStack {
+                                Spacer()
+                                Text("\(show.showName) - \(show.djName)")
+                                    .lineLimit(2) // Limit lines
+                                    .multilineTextAlignment(.center) // Center align text
+                                    .padding()
+                                Spacer()
+                            }
+                        }
                     }
                 }
             }
@@ -63,6 +78,7 @@ struct HomeScreen: View {
                                 .scaledToFit()
                                 .frame(width: 50, height: 50)
                                 .cornerRadius(10)
+                                .padding(5)
                             
                         }, placeholder: {
                             Image("wruvlogo")
@@ -70,6 +86,7 @@ struct HomeScreen: View {
                                 .scaledToFit()
                                 .frame(width: 50, height: 50)
                                 .cornerRadius(10)
+                                .padding(5)
                             
                         })
                     }else{
@@ -78,7 +95,9 @@ struct HomeScreen: View {
                             .scaledToFit()
                             .frame(width: 50, height: 50)
                             .cornerRadius(10)
+                            .padding(5)
                     }
+                    
 
                     Spacer()
                     Text(spinitron.getFirstSpin())

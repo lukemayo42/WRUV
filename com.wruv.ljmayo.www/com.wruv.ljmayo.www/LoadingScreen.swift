@@ -25,8 +25,10 @@ struct LoadingScreen: View {
                     .frame(width: 350, height: 350)
             }
         }.task{
+            //initial load of spinitron data
             await spinitron.refreshSpins()
             await spinitron.refreshShows()
+            await spinitron.getPlaylists()
         }
         .onAppear {
             // fade out after a few seconds
