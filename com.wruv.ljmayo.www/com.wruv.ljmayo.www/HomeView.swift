@@ -13,9 +13,10 @@ struct HomeView: View {
     @EnvironmentObject var radioStream: RadioStream
     @EnvironmentObject var authService: FirebaseAuthService
     @Environment(\.colorScheme) var colorScheme
-    @State private var playing: Bool =  false
+    @State var radioPlaying: Bool =  false
     @State private var showname: String = "radio show"
     @State private var djName: String = "DJ"
+    @State var archivesPlaying:Bool = false
     
     var body: some View {
         TabView {
@@ -34,7 +35,7 @@ struct HomeView: View {
                     Text("Chat")
                 }
             // Archives Screen Tab
-            tabGroup(view: ArchivesScreen())
+            tabGroup(view: ArchivesScreen(archivesPlaying: $archivesPlaying, radioPlaying:$radioPlaying))
                 .tabItem {
                     Image(systemName: "archivebox.fill")
                     Text("Archives")
@@ -52,7 +53,7 @@ struct HomeView: View {
     func tabGroup(view: some View) -> some View {
         VStack {
             view
-            RadioPlayerView(playing:$playing, showname:$showname, djName:$djName)
+            RadioPlayerView(radioPlaying:$radioPlaying, showname:$showname, djName:$djName, archivesPlaying: $archivesPlaying)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .background(colorScheme == .dark ? style.black : style.white)

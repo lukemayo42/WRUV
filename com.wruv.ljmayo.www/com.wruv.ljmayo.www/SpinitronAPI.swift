@@ -123,7 +123,8 @@ import Foundation
         }catch{
             print("Failed to get playlists: \(error)")
         }
-        print(playlistModelTemp[1].archivesLink)
+        //print(playlistModelTemp[1].archivesLink)
+        playlistModelTemp.removeFirst()
         playlistModel = playlistModelTemp
         isFetching = false
     }
@@ -273,7 +274,7 @@ struct PlaylistValues:Hashable{
             let djNameUnderscore = djName.replacingOccurrences(of: " ", with: "_")
             
             //return in archives format
-            return "\(dateStr)-\(showNameUnderscore)_with_\(djNameUnderscore).mp3"
+            return "https://www.uvm.edu/~wruv/res/thisweek/\(dateStr)-\(showNameUnderscore)_with_\(djNameUnderscore).mp3"
         }else{
             return "error"
         }

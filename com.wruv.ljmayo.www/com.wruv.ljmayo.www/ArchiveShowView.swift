@@ -9,12 +9,25 @@ import SwiftUI
 
 struct ArchiveShowView: View {
     @EnvironmentObject var style : UIStyles
-    @State private var playing:Bool = false
-    private var showname:String
-    private var djName:String
-    init(showname:String, djName:String){
-        self.showname = showname
-        self.djName = djName
+    @EnvironmentObject var radioStream: RadioStream
+    @Binding var archivesPlaying:Bool
+    @Binding var radioPlaying:Bool
+    @Binding var currShow: PlaylistValues?
+    @State private var archiveStream: RadioStream
+    private var showName: String
+    private var djName: String
+    private var archivesLink: String
+    private var show: PlaylistValues
+    @State private var playingLocal: Bool = false
+    init(show: PlaylistValues, archivesPlaying: Binding<Bool>,  currShow:  Binding<PlaylistValues?>, radioPlaying: Binding<Bool>){
+        showName = show.showName
+        djName = show.djName
+        archivesLink = show.archivesLink
+        archiveStream = RadioStream(url:archivesLink)
+        self._archivesPlaying = archivesPlaying
+        self._currShow = currShow
+        self._radioPlaying = radioPlaying
+        self.show = show
     }
 
     var body: some View {
@@ -39,38 +52,62 @@ struct ArchiveShowView: View {
                         Circle()
                            .fill(style.darkGray)
                             .frame(height: 40)
-                        if playing{
+                        if playingLocal{
                             Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 25.6, weight: .bold, design: .rounded))
+
                         }else{
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 25.6, weight: .bold, design: .rounded))
                         }
                     }
+
+
                    
                     
-                }
+                }.disabled(disableButtons())
                 Spacer()
                 HStack{
                     Text("\(showname)\n \(djName)").foregroundColor(style.white).font(style.primaryFont(size:24.0))
+
                         .frame(height: 70)
                         .truncationMode(.tail)
                         .lineLimit(2)
                         .multilineTextAlignment(.center)
                 }.padding()
+
                 Spacer()
+
             }
             .padding(.leading, 45.5)
         }
     }
     func toggleButton(){
-        if playing{
-            playing = false
+        if playingLocal{
+            currShow = nil
+            archivesPlaying = false
+            self.playingLocal = false
+            archiveStream.pause()
         }else{
-            playing = true
+            currShow = show
+            archivesPlaying = true
+            self.playingLocal = true
+            archiveStream.play()
         }
+    }
+    func disableButtons()->Bool{
+        //disable all the buttons if the radio is playing
+        if radioPlaying{
+            return true
+        }
+        //disable all other buttons except for the current archive show thats playing
+        if (currShow != nil){
+            if currShow!.showName == show.showName{
+                return false
+            }
+            return true
+        }
+        return false
     }
 }
 
 
-#Preview {
-    ArchivesScreen().environmentObject(UIStyles())
-}
+

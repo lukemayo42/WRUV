@@ -1,19 +1,19 @@
 import AVFoundation
 import Combine
 
-class RadioStream: NSObject, ObservableObject {
+class RadioStream: /*NSObject,*/ ObservableObject {
 
     @Published var isPlaying = false
-    @Published var isBuffering = false // Track buffering state
+    //@Published var isBuffering = false // Track buffering state
     var player: AVPlayer!
     var playerItem: AVPlayerItem!
-
+    /*
     override init() {
         super.init()  // Call superclass initializer
-    }
+    }*/
 
     init(url: String) {
-        super.init()  // Ensure superclass initializer is called
+       /* super.init()  // Ensure superclass initializer is called*/
 
         guard let url = URL(string: url) else {
             print("Invalid URL")
@@ -22,7 +22,7 @@ class RadioStream: NSObject, ObservableObject {
 
         self.playerItem = AVPlayerItem(url: url)
         self.player = AVPlayer(playerItem: playerItem)
-
+        /*
         // Observe the player's status and player item status for changes
         self.playerItem.addObserver(self, forKeyPath: "status", options: [.new], context: nil)
         self.playerItem.addObserver(self, forKeyPath: "error", options: [.new], context: nil)
@@ -32,7 +32,7 @@ class RadioStream: NSObject, ObservableObject {
 
         // Optionally observe loaded time ranges (for buffering)
         self.playerItem.addObserver(self, forKeyPath: "loadedTimeRanges", options: [.new], context: nil)
-
+         */
         print("Initialized with URL: \(url)")
     }
 
@@ -41,7 +41,7 @@ class RadioStream: NSObject, ObservableObject {
         if playerItem.status == .readyToPlay {
             player.play()
             isPlaying = true
-            isBuffering = false
+            //isBuffering = false
             print("Player is playing. rate: \(player.rate)")
         } else {
             print("Player is not ready to play yet.")
@@ -53,10 +53,10 @@ class RadioStream: NSObject, ObservableObject {
     func pause() {
         player.pause()
         isPlaying = false
-        isBuffering = false
+        //isBuffering = false
         print("Player is paused. rate: \(player.rate)")
     }
-
+/*
     // Handle KVO for status, rate, error, and buffering
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "status" {
@@ -124,5 +124,5 @@ class RadioStream: NSObject, ObservableObject {
         playerItem.removeObserver(self, forKeyPath: "error")
         player.removeObserver(self, forKeyPath: "rate")
         playerItem.removeObserver(self, forKeyPath: "loadedTimeRanges")
-    }
+    }*/
 }
