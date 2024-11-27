@@ -17,4 +17,8 @@ WRUV is an iOS app designed to stream live and previous radio shows hosted by th
 - Archives Screen: A catalog of previous shows hosted on WRUV that are available to listen back to.
 - Account Screen: Displays the user's account info: chatName and email.
 
+### Package Dependencies
+Our app requires the FirebaseCore, FirebaseAuth, and FirebaseFirestore packages contained within the Firebase iOS SDK repository. 
+
 ### Bugs and Known Issues
+There are no known bugs at this time.
