@@ -51,7 +51,7 @@ struct ChatScreen: View {
     }
     
     var body: some View {
-        // On a timer, pull new messages.
+        // On a timer, pull new messages. Commented to limit requests while developing.
         /*let timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
             Task {
                 await pull()
@@ -59,23 +59,23 @@ struct ChatScreen: View {
         }*/
         
         VStack {
+            Text("Live DJ Chat").font(.custom("Courier", size: 40))
+            
             ScrollView {
                 VStack(alignment: .leading) {
                     List {
                         ForEach(messages) { message in
                             Text("\(message.sendingUser): \(message.text)")
                                 .listRowSeparator(.hidden)
-                                //.listRowBackground(Color.gray)
+                                .font(.custom("Courier", size: 18))
                         }
                     }
                     .listStyle(.inset)
-                    //.background(Color.gray)
-                    .frame(height: min(CHATHEIGHT, 44.0 * Double(messages.count)))
+                    .frame(height: CHATHEIGHT)
                 }
             }
-            //.background(Color.gray)
             
-            // On post: pull immediately, so that user sees their message appeal.
+            // On post: pull immediately, so that user sees their message appear.
             TextField("Enter a new message here...", text: $newMessageText)
                 .onSubmit {
                     var newMessage = Message(text: newMessageText, sendingUser: username, timeSent: Date())
@@ -86,8 +86,8 @@ struct ChatScreen: View {
                     }
                 }
                 .frame(width: 350, alignment: .center)
+                .font(.custom("Courier", size: 20))
         }
-        //.background(Color.gray)
     }
 }
 
