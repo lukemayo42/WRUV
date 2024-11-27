@@ -33,7 +33,7 @@ class RadioStream: /*NSObject,*/ ObservableObject {
         // Optionally observe loaded time ranges (for buffering)
         self.playerItem.addObserver(self, forKeyPath: "loadedTimeRanges", options: [.new], context: nil)
          */
-        print("Initialized with URL: \(url)")
+        //print("Initialized with URL: \(url)")
     }
 
     // Play the stream

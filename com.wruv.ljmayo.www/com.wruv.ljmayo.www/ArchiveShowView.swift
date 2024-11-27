@@ -66,7 +66,7 @@ struct ArchiveShowView: View {
                 }.disabled(disableButtons())
                 Spacer()
                 HStack{
-                    Text("\(showname)\n \(djName)").foregroundColor(style.white).font(style.primaryFont(size:24.0))
+                    Text("\(showName)\n \(djName)").foregroundColor(style.white).font(style.primaryFont(size:24.0))
 
                         .frame(height: 70)
                         .truncationMode(.tail)
