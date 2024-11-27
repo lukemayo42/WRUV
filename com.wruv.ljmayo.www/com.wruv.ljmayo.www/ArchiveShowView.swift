@@ -18,6 +18,7 @@ struct ArchiveShowView: View {
     }
 
     var body: some View {
+        
         ZStack{
             RoundedRectangle(cornerRadius:12)
                 .fill(style.white)
@@ -28,6 +29,7 @@ struct ArchiveShowView: View {
                 .fill(style.black)
                 .frame(height:70)
                 .padding(EdgeInsets(top:0, leading: 25, bottom:0, trailing:25))
+            
             HStack{
                 Button(action: toggleButton){
                    ZStack{
@@ -43,13 +45,20 @@ struct ArchiveShowView: View {
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }
                     }
+                   
+                    
                 }
+                Spacer()
                 HStack{
-                    Text("\(showname)\n \(djName)").foregroundColor(style.white).bold().font(style.primaryFont(size:24.0))
+                    Text("\(showname)\n \(djName)").foregroundColor(style.white).font(style.primaryFont(size:24.0))
                         .frame(height: 70)
                         .truncationMode(.tail)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
                 }.padding()
+                Spacer()
             }
+            .padding(.leading, 30) 
         }
     }
     func toggleButton(){
