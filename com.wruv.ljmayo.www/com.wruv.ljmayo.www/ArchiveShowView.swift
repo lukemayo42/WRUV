@@ -9,12 +9,23 @@ import SwiftUI
 
 struct ArchiveShowView: View {
     @EnvironmentObject var style : UIStyles
-    @State private var playing:Bool = false
-    private var showname:String
-    private var djName:String
-    init(showname:String, djName:String){
-        self.showname = showname
-        self.djName = djName
+    @EnvironmentObject var radioStream: RadioStream
+    @Binding var playing:Bool
+    @Binding var currShow: PlaylistValues?
+    //@State private var archiveStream: RadioStream
+    private var showName: String
+    private var djName: String
+    private var archivesLink: String
+    private var show: PlaylistValues
+    @State private var playingLocal: Bool = false
+    init(show: PlaylistValues, playing: Binding<Bool>,  currShow:  Binding<PlaylistValues?>){
+        showName = show.showName
+        djName = show.djName
+        archivesLink = show.archivesLink
+        //archiveStream = RadioStream(url:archivesLink)
+        self._playing = playing
+        self._currShow = currShow
+        self.show = show
     }
 
     var body: some View {
@@ -37,27 +48,44 @@ struct ArchiveShowView: View {
                         Circle()
                            .fill(style.darkGray)
                             .frame(height: 50)
-                        if playing{
+                        if playingLocal{
                             Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }else{
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }
                     }
-                }
+                }.disabled(disableButtons())
                 HStack{
-                    Text("\(showname)\n \(djName)").foregroundColor(style.white).bold().font(style.primaryFont(size:24.0))
+                    Text("\(showName)\n \(djName)").foregroundColor(style.white).bold().font(style.primaryFont(size:24.0))
                         .frame(height: 70)
                         .truncationMode(.tail)
                 }.padding()
+                    
             }
         }
     }
     func toggleButton(){
-        if playing{
+        if playingLocal{
+            currShow = nil
             playing = false
+            self.playingLocal = false
         }else{
+            currShow = show
             playing = true
+            self.playingLocal = true
         }
+    }
+    func disableButtons()->Bool{
+        if (currShow != nil){
+            //print(show.showName)
+            //print(currShow!.showName)
+            if currShow!.showName == show.showName{
+                print("woohoo")
+                return false
+            }
+            return true
+        }
+        return false
     }
 }
 
