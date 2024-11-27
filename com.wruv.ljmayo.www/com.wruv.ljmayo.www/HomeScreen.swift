@@ -22,26 +22,37 @@ struct HomeScreen: View {
             Text("Upcoming Shows").font(.largeTitle)
             ScrollView {
                 Text("Today").bold()
-                ForEach(spinitron.shows.today, id: \.id ){ show in
-                    HStack{
-                        Text(spinitron.parseTime(time:show.start)).padding()
-                        Spacer()
-                        Text("\(show.showName) - \(show.djName)")
-                            .lineLimit(2) // Limit lines
-                            .multilineTextAlignment(.center) // Center align text
-                        Spacer()
+                Grid {
+                    ForEach(spinitron.shows.today, id: \.id) { show in
+                        GridRow {
+                            Text(spinitron.parseTime(time: show.start))
+                                .padding()
+                            VStack {
+                                Spacer()
+                                Text("\(show.showName) - \(show.djName)")
+                                    .lineLimit(2) // Limit lines
+                                    .multilineTextAlignment(.center) // Center align text
+                                    .padding()
+                                Spacer()
+                            }
+                        }
                     }
-                    
                 }
                 Text("Tomorrow").bold()
-                ForEach(spinitron.shows.tomorrow, id: \.id ){ show in
-                    HStack{
-                        Text(spinitron.parseTime(time:show.start)).padding()
-                        Spacer()
-                        Text("\(show.showName) - \(show.djName)")
-                            .lineLimit(2) // Limit lines
-                            .multilineTextAlignment(.center) // Center align text
-                        Spacer()
+                Grid {
+                    ForEach(spinitron.shows.tomorrow, id: \.id) { show in
+                        GridRow {
+                            Text(spinitron.parseTime(time: show.start))
+                                .padding()
+                            VStack {
+                                Spacer()
+                                Text("\(show.showName) - \(show.djName)")
+                                    .lineLimit(2) // Limit lines
+                                    .multilineTextAlignment(.center) // Center align text
+                                    .padding()
+                                Spacer()
+                            }
+                        }
                     }
                 }
             }
