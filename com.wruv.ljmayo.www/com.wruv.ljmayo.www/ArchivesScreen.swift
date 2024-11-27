@@ -11,7 +11,8 @@ struct ArchivesScreen: View {
     @EnvironmentObject var style : UIStyles
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var spinitron: SpinitronValues
-    @State var playing = false
+    @Binding var archivesPlaying:Bool
+    @Binding var radioPlaying:Bool
     @State var playingShow :PlaylistValues?  = nil
     @State private var showText: String?
     var body: some View {
@@ -25,7 +26,8 @@ struct ArchivesScreen: View {
                 
                 ScrollView{
                     ForEach(spinitron.filterPlaylists, id: \.self) { playlist in
-                            ArchiveShowView(show: playlist, playing: $playing, currShow: $playingShow)
+                        ArchiveShowView(show: playlist,archivesPlaying: $archivesPlaying, currShow: $playingShow,radioPlaying: $radioPlaying
+                            )
                     }
                 }
                
@@ -43,6 +45,3 @@ struct ArchivesScreen: View {
     }*/
 }
 
-#Preview {
-    ArchivesScreen().environmentObject(UIStyles())
-}

@@ -12,9 +12,10 @@ struct RadioPlayerView: View {
     @EnvironmentObject var style : UIStyles
     @EnvironmentObject var spinitron: SpinitronValues
     @EnvironmentObject var radioStream: RadioStream
-    @Binding var playing:Bool
+    @Binding var radioPlaying:Bool
     @Binding var showname:String
     @Binding var djName:String
+    @Binding var archivesPlaying:Bool
     
     var body: some View {
         ZStack{
@@ -29,14 +30,14 @@ struct RadioPlayerView: View {
                         Circle()
                            .fill(style.darkGray)
                             .frame(height: 50)
-                        if playing{
+                        if radioPlaying{
                             Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }else{
                             Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
                         }
                     }
                    .padding(.leading, 40)
-                }
+                }.disabled(archivesPlaying)
                 Spacer()
                 HStack{
                     Text("\(spinitron.currShow.showName)\n \(spinitron.currShow.djName)").foregroundColor(.white).font(style.primaryFont(size:24.0))
@@ -50,11 +51,11 @@ struct RadioPlayerView: View {
         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
     }
     func toggleButton(){
-        if playing{
-            playing = false
+        if radioPlaying{
+            radioPlaying = false
             radioStream.pause()
         }else{
-            playing = true
+            radioPlaying = true
             radioStream.play()
         }
     }

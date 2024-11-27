@@ -10,21 +10,23 @@ import SwiftUI
 struct ArchiveShowView: View {
     @EnvironmentObject var style : UIStyles
     @EnvironmentObject var radioStream: RadioStream
-    @Binding var playing:Bool
+    @Binding var archivesPlaying:Bool
+    @Binding var radioPlaying:Bool
     @Binding var currShow: PlaylistValues?
-    //@State private var archiveStream: RadioStream
+    @State private var archiveStream: RadioStream
     private var showName: String
     private var djName: String
     private var archivesLink: String
     private var show: PlaylistValues
     @State private var playingLocal: Bool = false
-    init(show: PlaylistValues, playing: Binding<Bool>,  currShow:  Binding<PlaylistValues?>){
+    init(show: PlaylistValues, archivesPlaying: Binding<Bool>,  currShow:  Binding<PlaylistValues?>, radioPlaying: Binding<Bool>){
         showName = show.showName
         djName = show.djName
         archivesLink = show.archivesLink
-        //archiveStream = RadioStream(url:archivesLink)
-        self._playing = playing
+        archiveStream = RadioStream(url:archivesLink)
+        self._archivesPlaying = archivesPlaying
         self._currShow = currShow
+        self._radioPlaying = radioPlaying
         self.show = show
     }
 
@@ -67,20 +69,24 @@ struct ArchiveShowView: View {
     func toggleButton(){
         if playingLocal{
             currShow = nil
-            playing = false
+            archivesPlaying = false
             self.playingLocal = false
+            archiveStream.pause()
         }else{
             currShow = show
-            playing = true
+            archivesPlaying = true
             self.playingLocal = true
+            archiveStream.play()
         }
     }
     func disableButtons()->Bool{
+        //disable all the buttons if the radio is playing
+        if radioPlaying{
+            return true
+        }
+        //disable all other buttons except for the current archive show thats playing
         if (currShow != nil){
-            //print(show.showName)
-            //print(currShow!.showName)
             if currShow!.showName == show.showName{
-                print("woohoo")
                 return false
             }
             return true
@@ -90,6 +96,4 @@ struct ArchiveShowView: View {
 }
 
 
-#Preview {
-    ArchivesScreen().environmentObject(UIStyles())
-}
+
