@@ -35,14 +35,14 @@ struct ArchiveShowView: View {
                    ZStack{
                         Circle()
                            .fill(style.white)
-                            .frame(height: 60)
+                            .frame(height: 48)
                         Circle()
                            .fill(style.darkGray)
-                            .frame(height: 50)
+                            .frame(height: 40)
                         if playing{
-                            Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
+                            Image(systemName: "pause").foregroundColor(style.white).font(.system(size: 25.6, weight: .bold, design: .rounded))
                         }else{
-                            Image(systemName: "play").foregroundColor(style.white).font(.system(size: 32, weight: .bold, design: .rounded))
+                            Image(systemName: "play").foregroundColor(style.white).font(.system(size: 25.6, weight: .bold, design: .rounded))
                         }
                     }
                    
@@ -58,7 +58,7 @@ struct ArchiveShowView: View {
                 }.padding()
                 Spacer()
             }
-            .padding(.leading, 30) 
+            .padding(.leading, 45.5)
         }
     }
     func toggleButton(){
